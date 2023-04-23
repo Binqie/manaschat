@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -13,8 +13,94 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 
+import Select from 'react-select'
+
 import { PUBLIC_ROUTES } from '../constants/consts'
 import { Link } from 'react-router-dom'
+import { ISelectCollection } from '../types'
+import { fetchDepartments, fetchFaculties, setDepartments, setFaculties } from '../store/slices/UserSlice'
+
+import { useAppDispatch, useAppSelector } from '../hooks/hooks'
+import { useForm } from 'react-hook-form'
+
+// {
+//   "email": "string",
+//   "password": "string",
+//   "fullname": "string",
+//   "facultyId": 0,
+//   "departmentId": 0,
+//   "classroom": 0,
+//   "course": 0,
+//   "yearOfAdmission": 0
+// }
+
+const inputs = [
+  {
+    id: 'email',
+    name: 'email',
+    type: 'email',
+    label: 'input your email',
+  },
+  {
+    id: 'pass',
+    name: 'password',
+    type: 'password',
+    label: 'enter your password',
+  },
+  {
+    id: 'fullname',
+    name: 'fullname',
+    type: 'text',
+    label: 'your full name',
+  },
+  {
+    id: 'classroom',
+    name: 'classroom',
+    type: 'number',
+    label: 'your class room',
+  },
+  {
+    id: 'course',
+    name: 'course',
+    type: 'text',
+    label: 'your course',
+  },
+  {
+    id: 'yearOfAdmission',
+    name: 'yearOfAdmission',
+    type: 'date',
+    label: 'your year Of Admission',
+  },
+]
+
+const faculties: ISelectCollection = {
+  name: 'faculties',
+  selects: [
+    { value: 1, label: 'Chocolate' },
+    { value: 2, label: 'Strawberry' },
+  ],
+}
+
+const departments: ISelectCollection = {
+  name: 'departments',
+  selects: [
+    { value: 1, label: 'dep 1' },
+    { value: 2, label: 'dep 2' },
+  ],
+}
+
+const MySelect: FC<ISelectCollection> = (options: ISelectCollection) => {
+  return (
+    <div style={{ marginBottom: 10 }}>
+      <Select
+        {...(options.name === 'faculties' && {
+          defaultValue: options.selects[0],
+        })}
+        options={options.selects}
+      />
+    </div>
+  )
+}
 
 function Copyright(props: any) {
   return (
@@ -40,14 +126,28 @@ function Copyright(props: any) {
 const theme = createTheme()
 
 const Signup = () => {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    })
+  const dispatch = useAppDispatch()
+  const faculties: ISelectCollection = useAppSelector((state) => state.user.faculties)
+  const departments: ISelectCollection = useAppSelector((state) => state.user.departments)
+
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm({ mode: 'onTouched' })
+
+  const onSubmit = (data: Object) => {
+    console.log('data', data)
   }
+
+  useEffect(() => {
+    dispatch(fetchFaculties())
+    dispatch(fetchDepartments())
+  }, [])
+
+  useEffect(() => {
+    console.log(faculties, departments)
+  }, [faculties, departments])
 
   return (
     <ThemeProvider theme={theme}>
@@ -103,29 +203,26 @@ const Signup = () => {
             <Box
               component='form'
               noValidate
-              onSubmit={handleSubmit}
+              onSubmit={handleSubmit(onSubmit)}
               sx={{ mt: 1 }}
             >
-              <TextField
-                margin='normal'
-                required
-                fullWidth
-                id='email'
-                label='Email Address'
-                name='email'
-                autoComplete='email'
-                autoFocus
-              />
-              <TextField
-                margin='normal'
-                required
-                fullWidth
-                name='password'
-                label='Password'
-                type='password'
-                id='password'
-                autoComplete='current-password'
-              />
+              {inputs.map((input, index) => (
+                <TextField
+                  key={index}
+                  margin='normal'
+                  required
+                  fullWidth
+                  id={input.id}
+                  label={input.label}
+                  autoComplete={input.name}
+                  autoFocus
+                  {...register(input.name)}
+                />
+              ))}
+
+              <MySelect {...faculties} />
+              <MySelect {...departments} />
+
               <FormControlLabel
                 control={
                   <Checkbox

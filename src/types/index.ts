@@ -9,3 +9,12 @@ export interface IInput {
     label?: string,
 }
 
+export interface ISelect {
+  value: number,
+  label: string
+}
+
+export interface ISelectCollection {
+  name: string,
+  selects: ISelect[],
+}
