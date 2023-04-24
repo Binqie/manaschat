@@ -8,7 +8,6 @@ import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
-import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
 
 import Select from 'react-select'
 
@@ -19,6 +18,7 @@ import { fetchDepartments, fetchFaculties } from '../store/slices/UserSlice'
 
 import { useAppDispatch, useAppSelector } from '../hooks/hooks'
 import { useForm } from 'react-hook-form'
+import $api from '../api'
 
 const inputs = [
   {
@@ -31,8 +31,8 @@ const inputs = [
       required: true,
       maxLength: 24,
       minLength: 22,
-      pattern: new RegExp(/[0-9]+\.[0-9]+@manas\.edu\.kg/gm)
-    }
+      pattern: new RegExp(/[0-9]+\.[0-9]+@manas\.edu\.kg/gm),
+    },
   },
   {
     id: 'pass',
@@ -44,7 +44,7 @@ const inputs = [
       required: true,
       maxLength: 15,
       minLength: 4,
-    }
+    },
   },
   {
     id: 'fullname',
@@ -54,17 +54,7 @@ const inputs = [
     validation: {
       required: true,
       minLength: 2,
-    }
-  },
-  {
-    id: 'classroom',
-    name: 'classroom',
-    type: 'number',
-    label: 'your class room',
-    validation: {
-      required: true,
-      max: 6
-    }
+    },
   },
   {
     id: 'course',
@@ -73,7 +63,18 @@ const inputs = [
     label: 'your course',
     validation: {
       required: true,
-      max: 6
+      max: 5,
+      min: 0,
+    },
+  },
+  {
+    id: 'classroom',
+    name: 'classroom',
+    type: 'number',
+    label: 'your class room',
+    display: 'none',
+    validation: {
+      required: false
     }
   },
   {
@@ -84,8 +85,8 @@ const inputs = [
     validation: {
       required: true,
       max: new Date().getFullYear(),
-      min: 1995
-    }
+      min: 1995,
+    },
   },
 ]
 
@@ -111,6 +112,8 @@ const Signup = () => {
   const [selectedFaculty, setSelectedFaculty] = useState<IFaculty | null>(null)
   const [selectedDepartment, setSelectedDepartment] =
     useState<IDepartment | null>(null)
+  const [selectedCourse, setSelectedCourse] = useState<number>(0)
+  const [selectedClassroom, setSelectedClassroom] = useState<number | null>(null)
 
   const {
     register,
@@ -118,18 +121,19 @@ const Signup = () => {
     handleSubmit,
   } = useForm({ mode: 'onTouched' })
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     const userInfo: IUser = {
       email: data.email,
       password: data.password,
       fullname: data.fullname,
       facultyId: selectedFaculty?.value || 0,
       departmentId: selectedDepartment?.value || 0,
-      classroom: 0,
-      course: 0,
-      yearOfAdmission: 0,
+      classroom: selectedClassroom,
+      course: selectedCourse,
+      yearOfAdmission: +data.yearOfAdmission.split('-')[0],
     }
-    console.log('userInfo', userInfo)
+    const response = await $api.post('/Users/SignUp', userInfo)
+    console.log(response)
   }
 
   useEffect(() => {
@@ -176,7 +180,7 @@ const Signup = () => {
         sx={{
           display: 'flex',
           justifyContent: 'center',
-          alignItems: 'center'
+          alignItems: 'center',
         }}
       >
         <Box
@@ -186,7 +190,7 @@ const Signup = () => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            maxWidth: 400
+            maxWidth: 400,
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
@@ -206,8 +210,9 @@ const Signup = () => {
           >
             {inputs.map((input, index) => (
               <TextField
-                style={{ marginBottom: 10 }}
+                style={{ marginBottom: 10, display: (input.name === 'classroom' && selectedCourse !== 0) ? 'none' : 'block' }}
                 key={index}
+                variant='outlined'
                 margin='none'
                 required
                 fullWidth
@@ -217,10 +222,24 @@ const Signup = () => {
                 label={input.label}
                 autoComplete={input.name}
                 autoFocus
-                {...register(input.name, {...input.validation})}
+                {...(((input.name === 'email' && errors.email) ||
+                  (input.name === 'password' && errors.password)) && {
+                  helperText: input.hint,
+                })}
+                {...(input.name === 'course' && {
+                  onInput: ({target}) => {
+                    setSelectedCourse(+(target as HTMLButtonElement).value)
+                    setSelectedClassroom(null)
+                  }
+                })}
+                {...(input.name === 'classroom' && {
+                  onInput: ({target}) => setSelectedClassroom(+(target as HTMLButtonElement).value),
+                })}
+                {...(input.name === 'classroom' &&
+                  selectedCourse !== 0 && { disabled: true })}
+                {...register(input.name, { ...input.validation })}
               />
             ))}
-            {errors && <span>validation error</span>}
             <div style={{ marginBottom: 10 }}>
               <Select
                 value={selectedFaculty}
@@ -250,7 +269,7 @@ const Signup = () => {
               variant='contained'
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Sign Up
             </Button>
             <Grid container>
               <Grid
