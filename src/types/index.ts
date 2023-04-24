@@ -1,20 +1,31 @@
 export interface IProps {
-  children?: React.ReactNode;
+  children?: React.ReactNode
 }
 
 export interface IInput {
-    id: string,
-    name: string,
-    type: string,
-    label?: string,
+  id: string
+  name: string
+  type: string
+  label?: string
 }
 
 export interface ISelect {
-  value: number,
+  value: number
   label: string
 }
 
 export interface ISelectCollection {
-  name: string,
-  selects: ISelect[],
+  name: string
+  selects: ISelect[]
+}
+
+export interface IUser {
+  email: string
+  password: string
+  fullname: string
+  facultyId: number
+  departmentId: number
+  classroom: number
+  course: number
+  yearOfAdmission: number
 }

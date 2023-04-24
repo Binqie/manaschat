@@ -3,7 +3,6 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import $api from '../../api'
 import { BASE_URL } from '../../constants/consts'
 import { ISelectCollection } from '../../types'
-import { useAppDispatch } from '../../hooks/hooks'
 
 interface UserState {
   isAuthorized: Boolean
@@ -40,13 +39,10 @@ export const UserSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(fetchFaculties.fulfilled, (state, action) => {
-      // Add user to the state array
       state.faculties.selects = action.payload
     }),
     builder.addCase(fetchDepartments.fulfilled, (state, action) => {
-      // Add user to the state array
       state.departments.selects = action.payload
     })
   },
@@ -64,7 +60,6 @@ export const fetchFaculties = createAsyncThunk('user/faculties', async () => {
     }
   )
   return data
-  // console.log('facs', response.data)
 })
 
 export const fetchDepartments = createAsyncThunk(
@@ -80,7 +75,6 @@ export const fetchDepartments = createAsyncThunk(
       return newItem
     })
     return data
-    // console.log('deps', response.data)
   }
 )
 
