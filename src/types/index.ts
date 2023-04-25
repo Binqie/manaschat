@@ -25,7 +25,7 @@ export interface IUser {
   fullname: string
   facultyId: number
   departmentId: number
-  classroom: number
+  classroom: number | null
   course: number
   yearOfAdmission: number
 }
