@@ -31,7 +31,7 @@ const inputs = [
       required: true,
       maxLength: 24,
       minLength: 22,
-      pattern: new RegExp(/[0-9]+\.[0-9]+@manas\.edu\.kg/gm),
+      pattern: new RegExp(/[0-9]+\.[0-9]+(@manas\.edu\.kg)$/gm),
     },
   },
   {
@@ -132,6 +132,7 @@ const Signup = () => {
       course: selectedCourse,
       yearOfAdmission: +data.yearOfAdmission.split('-')[0],
     }
+    console.log(userInfo)
     const response = await $api.post('/Users/SignUp', userInfo)
     console.log(response)
   }
@@ -140,11 +141,6 @@ const Signup = () => {
     dispatch(fetchFaculties())
     dispatch(fetchDepartments())
   }, [])
-
-  // useEffect(() => {
-  //   console.log(selectedDepartment, selectedFaculty)
-  //   console.log(departments, faculties)
-  // }, [departments, selectedFaculty, selectedDepartment])
 
   return (
     <Grid
@@ -210,7 +206,7 @@ const Signup = () => {
           >
             {inputs.map((input, index) => (
               <TextField
-                style={{ marginBottom: 10, display: (input.name === 'classroom' && selectedCourse !== 0) ? 'none' : 'block' }}
+                style={{ marginBottom: 10, display: (input.name === 'classroom' && (selectedCourse !== 0 || selectedCourse === null)) ? 'none' : 'block' }}
                 key={index}
                 variant='outlined'
                 margin='none'
@@ -235,8 +231,6 @@ const Signup = () => {
                 {...(input.name === 'classroom' && {
                   onInput: ({target}) => setSelectedClassroom(+(target as HTMLButtonElement).value),
                 })}
-                {...(input.name === 'classroom' &&
-                  selectedCourse !== 0 && { disabled: true })}
                 {...register(input.name, { ...input.validation })}
               />
             ))}
