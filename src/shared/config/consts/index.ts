@@ -6,6 +6,7 @@ export const PUBLIC_ROUTES = {
 }
 
 export const PRIVATE_ROUTES = {
-    HOME: '/home',
-    POST_CREATION: '/create-post'
+    HOME: '/',
+    POST_CREATION: '/create-post',
+    ADMIN: '/admin'
 }

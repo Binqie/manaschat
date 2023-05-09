@@ -34,3 +34,35 @@ export interface IUser {
   course: number
   yearOfAdmission: number
 }
+
+export interface IPost {
+  id: number
+  createdAt: Date
+  title: string
+  body: string
+  image: string
+  type: number
+  electionPostDetailsList: [
+    {
+      id: number
+      postId: number
+      variant: string
+    }
+  ]
+  electionPostResultsList: [
+    {
+      id: number
+      authorId: number
+      electionPostDetailId: number
+    }
+  ]
+  suggestionPostResultsList: [
+    {
+      id: number
+      authorId: number
+      postId: number
+      isAgree: boolean
+    }
+  ]
+  authorId: number
+}

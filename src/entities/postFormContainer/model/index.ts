@@ -1,12 +1,11 @@
-import { IInput } from "shared/model/Types"
-import { FieldValues } from 'react-hook-form/dist/types'
+import { IInput } from 'shared/model/Types'
 
-
-export interface IInputProps {
-  type: 'election' | 'suggestion' | 'comment'
-  inputs: IInput[]
+export enum PostTypesEnum {
+  COMMENT,
+  SUGGESTION,
+  ELECTION
 }
 
-export const onSubmit = (data: FieldValues): void => {
-    console.log('data', data)
-  }
+export interface IInputProps {
+  inputs: IInput[]
+}

@@ -1,19 +1,14 @@
 export const PostFormInputs = [
   {
-    id: 'selectedImage',
-    name: 'image',
-    type: 'file',
-  },
-  {
     id: 'selectedTitle',
     name: 'title',
     type: 'text',
     label: 'title',
   },
   {
-    id: 'selectedDescription',
-    name: 'description',
+    id: 'selectedBody',
+    name: 'body',
     type: 'text',
-    label: 'description',
+    label: 'body',
   },
 ]

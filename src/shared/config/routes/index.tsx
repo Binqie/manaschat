@@ -5,6 +5,7 @@ import Signup from 'pages/signup/ui'
 import Home from 'pages/home/ui'
 import PostCreation from 'pages/postCreation/ui'
 import { IRoute } from 'shared/model/Types'
+import Admin from 'pages/admin/ui'
 
 export const PublicRoutes: IRoute[] = [
   {
@@ -25,5 +26,9 @@ export const PrivateRoutes: IRoute[] = [
   {
     path: PRIVATE_ROUTES.POST_CREATION,
     element: <PostCreation />,
+  },
+  {
+    path: PRIVATE_ROUTES.ADMIN,
+    element: <Admin />,
   },
 ]

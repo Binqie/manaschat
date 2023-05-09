@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-
+import { FieldValues } from 'react-hook-form/dist/types'
 import { BsFillTrashFill } from 'react-icons/bs'
 
 import {
@@ -12,12 +12,14 @@ import {
   RadioGroup,
   Radio,
 } from '@mui/material'
-import FlexContainer from 'widgets/flexContainer/ui/indes'
+import FlexContainer from 'widgets/flexContainer/ui'
 
-import { IInputProps, onSubmit } from '../model'
+import { IInputProps, PostTypesEnum } from '../model'
+import { Console } from 'console'
 
-const PostFormContainer: FC<IInputProps> = ({ type, inputs }) => {
-  const [selectedFile, setSelectedFile] = useState()
+const PostFormContainer: FC<IInputProps> = ({ inputs }) => {
+  const [postType, setPostType] = useState<number>(0)
+  const [selectedImage, setSelectedImage] = useState()
   const [preview, setPreview] = useState<string>()
   const [variantsList, setVariantsList] = useState<string[]>([])
   const [variant, setVariant] = useState<string>('')
@@ -29,25 +31,27 @@ const PostFormContainer: FC<IInputProps> = ({ type, inputs }) => {
   } = useForm({ mode: 'onTouched' })
 
   useEffect(() => {
-    if (!selectedFile) {
+    if (!selectedImage) {
       setPreview(undefined)
       return
     }
 
-    const objectUrl = URL.createObjectURL(selectedFile)
+    const objectUrl = URL.createObjectURL(selectedImage)
     setPreview(objectUrl)
-    console.log('previewImage')
     return () => URL.revokeObjectURL(objectUrl)
-  }, [selectedFile])
+  }, [selectedImage])
 
-  const onSelectFile = (e: any) => {
-    console.log('e', e)
+  const onSelectImage = (e: any) => {
     if (!e.target.files || e.target.files.length === 0) {
-      setSelectedFile(undefined)
+      setSelectedImage(undefined)
       return
     }
-    console.log('selectImage')
-    setSelectedFile(e.target.files[0])
+
+    setSelectedImage(e.target.files[0])
+  }
+
+  const handlePostTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPostType(+(event.target as HTMLInputElement).value)
   }
 
   const addVariant = (): void => {
@@ -60,6 +64,15 @@ const PostFormContainer: FC<IInputProps> = ({ type, inputs }) => {
   const removeVariant = (variant: string): void => {
     const newList = variantsList.filter((vt) => vt !== variant)
     setVariantsList(newList)
+  }
+
+  const onSubmit = (data: FieldValues): void => {
+    const post = {
+      ...data,
+      image: selectedImage,
+      type: postType,
+    }
+    console.log('data', post)
   }
 
   return (
@@ -78,11 +91,15 @@ const PostFormContainer: FC<IInputProps> = ({ type, inputs }) => {
               height={200}
             />
           </div>
+          <TextField
+            onChange={(e) => onSelectImage(e)}
+            id='selectedImage'
+            type='file'
+            size='small'
+            style={{ margin: '5px 0', width: '100%' }}
+          />
           {inputs.map((input, index) => (
             <TextField
-              {...(input.type == 'file' && {
-                onChange: (event) => onSelectFile(event),
-              })}
               id={input.id}
               key={index}
               label={input.label}
@@ -92,7 +109,32 @@ const PostFormContainer: FC<IInputProps> = ({ type, inputs }) => {
               {...register(input.name)}
             />
           ))}
-          {type === 'election' && {
+          <FormControl component='fieldset'>
+            <FormLabel component='legend'>Post Type</FormLabel>
+            <RadioGroup
+              aria-label='gender'
+              name='gender1'
+              value={postType}
+              onChange={handlePostTypeChange}
+            >
+              <FormControlLabel
+                value={PostTypesEnum.COMMENT}
+                control={<Radio />}
+                label='Simple post'
+              />
+              <FormControlLabel
+                value={PostTypesEnum.SUGGESTION}
+                control={<Radio />}
+                label='Suggestion'
+              />
+              <FormControlLabel
+                value={PostTypesEnum.ELECTION}
+                control={<Radio />}
+                label='Election'
+              />
+            </RadioGroup>
+          </FormControl>
+          {postType === 2 && {
             ...(
               <FormControl style={{ width: '100%' }}>
                 <FormLabel>Variants</FormLabel>
