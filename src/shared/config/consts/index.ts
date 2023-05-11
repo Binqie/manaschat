@@ -1,3 +1,4 @@
+// export const BASE_URL = 'https://localhost:7289'
 export const BASE_URL = 'https://localhost:7289'
 
 export const PUBLIC_ROUTES = {
