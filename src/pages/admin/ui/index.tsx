@@ -1,11 +1,13 @@
-import React from 'react'
-import MainContainer from 'widgets/mainContainer/ui'
+import Drawer from 'widgets/drawer/ui'
+import CollapsibleTable from 'widgets/table/ui'
 
 const Admin = () => {
   return (
-    <MainContainer>
-      <div>Admin</div>
-    </MainContainer>
+    <div>
+      <Drawer>
+        <CollapsibleTable/>
+      </Drawer>
+    </div>
   )
 }
 

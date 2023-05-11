@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import MainContainer from '../../../widgets/mainContainer/ui'
-import PostCreationForm from '../../../features/postFormElection/ui'
+import PostCreationForm from '../../../features/postCreation/ui'
 
 export default function PostCreation() {
   return (

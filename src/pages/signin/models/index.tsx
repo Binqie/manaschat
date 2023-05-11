@@ -1,4 +1,4 @@
-import $api from 'shared/api'
+import { $authApi } from 'shared/api'
 
 export interface IUser {
   email: string
@@ -6,6 +6,6 @@ export interface IUser {
 }
 
 export const SignIn = async (data: any) => {
-  const response = await $api.post('/Users/SignIn', data)
+  const response = await $authApi.post('/Users/SignIn', data)
   console.log(response)
 }

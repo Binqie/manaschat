@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { PayloadAction } from '@reduxjs/toolkit'
-import $api from 'shared/api'
+import { $api } from 'shared/api'
 import { BASE_URL } from 'shared/config/consts'
 import { ISelectCollection } from 'shared/model/Types'
 
