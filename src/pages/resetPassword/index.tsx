@@ -13,22 +13,21 @@ import { Link, Navigate } from 'react-router-dom'
 
 import { PRIVATE_ROUTES, PUBLIC_ROUTES } from 'shared/config/consts'
 import { $api } from 'shared/api'
-import { useSelector } from 'react-redux'
-import { setAuthorized } from 'app/store/slices/UserSlice'
-import { useAppDispatch } from 'shared/hooks'
-import { IStore, IUser } from 'shared/model/Types'
+import { useState } from 'react'
 
-type ISigninUser = Pick<IUser, 'email' | 'password'>
+type IPasswordReset = {
+  email: string
+  oldPassword: string
+  newPassword: string
+}
 
-export const SignIn = async (data: ISigninUser) => {
-  const response = await $api.post('/Users/SignIn', data)
+export const SendPasswordResetRequest = async (data: IPasswordReset) => {
+  const response = await $api.put('/Users/ResetPassword', data)
   return response
 }
 
-const Signin = () => {
-  const dispatch = useAppDispatch()
-  const isAuthorized = useSelector((store: IStore) => store.user.isAuthorized)
-  console.log('isAuthorized', isAuthorized)
+const ResetPassword = () => {
+  const [resetPasswordStatus, setResetPasswordStatus] = useState<number>(0)
   const {
     register,
     formState: { errors },
@@ -36,22 +35,20 @@ const Signin = () => {
   } = useForm({ mode: 'onTouched' })
 
   const onSubmit = async (data: any) => {
-    console.log(data)
-    const userInfo: ISigninUser = {
+    const userInfo: IPasswordReset = {
       email: data.email,
-      password: data.password,
+      oldPassword: data.oldPassword,
+      newPassword: data.newPassword,
     }
     console.log(userInfo)
-    const response = await SignIn(userInfo)
+    const response = await SendPasswordResetRequest(userInfo)
     console.log(response)
-    if (response.status === 200) {
-      dispatch(setAuthorized(true))
-    }
+    setResetPasswordStatus(response.status)
   }
 
-  if (isAuthorized) {
+  if (resetPasswordStatus === 200) {
     console.log('navigate')
-    return <Navigate to={PRIVATE_ROUTES.HOME}/>
+    return <Navigate to={PUBLIC_ROUTES.SIGNIN} />
   }
 
   return (
@@ -110,7 +107,7 @@ const Signin = () => {
             component='h1'
             variant='h5'
           >
-            Sign in
+            Reset Password
           </Typography>
           <Box
             component='form'
@@ -142,12 +139,23 @@ const Signin = () => {
               margin='normal'
               required
               fullWidth
-              label='Password'
+              label='Old Password'
               type='password'
-              id='password'
+              id='old-password'
               autoComplete='current-password'
               size='small'
-              {...register('password', { required: true })}
+              {...register('oldPassword', { required: true })}
+            />
+            <TextField
+              margin='normal'
+              required
+              fullWidth
+              label='New Password'
+              type='password'
+              id='new-password'
+              autoComplete='current-password'
+              size='small'
+              {...register('newPassword', { required: true })}
             />
             <Button
               type='submit'
@@ -155,7 +163,7 @@ const Signin = () => {
               variant='contained'
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Reset
             </Button>
             <Grid container>
               <Grid
@@ -177,4 +185,4 @@ const Signin = () => {
   )
 }
 
-export default Signin
+export default ResetPassword

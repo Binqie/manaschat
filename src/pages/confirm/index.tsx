@@ -13,45 +13,33 @@ import { Link, Navigate } from 'react-router-dom'
 
 import { PRIVATE_ROUTES, PUBLIC_ROUTES } from 'shared/config/consts'
 import { $api } from 'shared/api'
-import { useSelector } from 'react-redux'
-import { setAuthorized } from 'app/store/slices/UserSlice'
-import { useAppDispatch } from 'shared/hooks'
-import { IStore, IUser } from 'shared/model/Types'
+import { ICode } from 'shared/model/Types'
+import { useState } from 'react'
 
-type ISigninUser = Pick<IUser, 'email' | 'password'>
-
-export const SignIn = async (data: ISigninUser) => {
-  const response = await $api.post('/Users/SignIn', data)
+export const SendConfirmationCode = async (data: ICode) => {
+  const response = await $api.put('/Users/ConfirmEmail', data)
   return response
 }
 
-const Signin = () => {
-  const dispatch = useAppDispatch()
-  const isAuthorized = useSelector((store: IStore) => store.user.isAuthorized)
-  console.log('isAuthorized', isAuthorized)
+const Confirm = () => {
+  const [confirmationBody, setConfirmationBody] = useState<boolean>(false)
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm({ mode: 'onTouched' })
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: any): Promise<void> => {
+    data.code = +data.code
     console.log(data)
-    const userInfo: ISigninUser = {
-      email: data.email,
-      password: data.password,
-    }
-    console.log(userInfo)
-    const response = await SignIn(userInfo)
+    const response = await SendConfirmationCode(data)
     console.log(response)
-    if (response.status === 200) {
-      dispatch(setAuthorized(true))
-    }
+    setConfirmationBody(response.data)
   }
 
-  if (isAuthorized) {
+  if (confirmationBody) {
     console.log('navigate')
-    return <Navigate to={PRIVATE_ROUTES.HOME}/>
+    return <Navigate to={PUBLIC_ROUTES.SIGNIN} />
   }
 
   return (
@@ -110,7 +98,7 @@ const Signin = () => {
             component='h1'
             variant='h5'
           >
-            Sign in
+            Confirm your account
           </Typography>
           <Box
             component='form'
@@ -120,42 +108,27 @@ const Signin = () => {
           >
             <TextField
               margin='normal'
+              type='number'
               required
               fullWidth
-              id='email'
-              label='Email Address'
-              autoComplete='email'
+              id='code'
+              label='Code'
+              autoComplete='code'
               autoFocus
               size='small'
-              {...(errors.email && {
-                helperText:
-                  'Your email must be in format 0000.00000@manas.edu.kg',
-              })}
-              {...register('email', {
+              {...register('code', {
                 required: true,
-                pattern: new RegExp(/[0-9]+\.[0-9]+(@manas\.edu\.kg)$/gm),
               })}
             >
               <AiFillEyeInvisible />
             </TextField>
-            <TextField
-              margin='normal'
-              required
-              fullWidth
-              label='Password'
-              type='password'
-              id='password'
-              autoComplete='current-password'
-              size='small'
-              {...register('password', { required: true })}
-            />
             <Button
               type='submit'
               fullWidth
               variant='contained'
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Confirm
             </Button>
             <Grid container>
               <Grid
@@ -165,9 +138,7 @@ const Signin = () => {
                 <Link to='/password/forgot'>Forgot password?</Link>
               </Grid>
               <Grid item>
-                <Link to={PUBLIC_ROUTES.SIGNUP}>
-                  {"Don't have an account? Sign Up"}
-                </Link>
+                <Link to={PUBLIC_ROUTES.SIGNIN}>{'Back to Sign In'}</Link>
               </Grid>
             </Grid>
           </Box>
@@ -177,4 +148,4 @@ const Signin = () => {
   )
 }
 
-export default Signin
+export default Confirm

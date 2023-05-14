@@ -14,9 +14,24 @@ export interface IInput {
   label?: string
 }
 
+export interface IFaculty {
+  value: number
+  label: string
+}
+
+export interface IDepartment {
+  value: number
+  label: string
+  facultyId?: number
+}
+
 export interface ISelect {
   value: number
   label: string
+}
+
+export interface ICode {
+  code: string
 }
 
 export interface ISelectCollection {
@@ -33,6 +48,13 @@ export interface IUser {
   classroom: number | null
   course: number
   yearOfAdmission: number
+}
+
+export interface IStoreUser {
+  isAuthorized: boolean
+  user: object
+  faculties: ISelectCollection
+  departments: ISelectCollection
 }
 
 export interface IPost {
@@ -65,4 +87,10 @@ export interface IPost {
     }
   ]
   authorId: number
+}
+
+
+export interface IStore {
+  user: IStoreUser
+  posts: IPost
 }

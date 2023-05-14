@@ -28,6 +28,9 @@ export const UserSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    setAuthorized: (state, action: PayloadAction<Boolean>) => {
+      state.isAuthorized = action.payload
+    },
     setUser: (state, action: PayloadAction<Object>) => {
       state.user = action.payload
     },
@@ -80,6 +83,7 @@ export const fetchDepartments = createAsyncThunk(
   }
 )
 
-export const { setUser, setFaculties, setDepartments } = UserSlice.actions
+export const { setAuthorized, setUser, setFaculties, setDepartments } =
+  UserSlice.actions
 
 export default UserSlice.reducer

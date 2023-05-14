@@ -1,6 +1,8 @@
 import { Button } from '@mui/material'
-import { IButtonProps } from '../model'
-
+interface IButtonProps {
+  color?: 'success' | 'error' | 'primary' | 'secondary'
+  text: string
+}
 const MyButton = ({ color = 'primary', text = 'button' }: IButtonProps) => {
   return (
     <Button
