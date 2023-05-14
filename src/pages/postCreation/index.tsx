@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
-import MainContainer from '../../../widgets/mainContainer/ui'
-import PostCreationForm from '../../../features/postCreation/ui'
+import MainContainer from 'widgets/mainContainer'
+import PostFormContainer from 'components/post/PostCreationForm'
 
 export default function PostCreation() {
   return (
@@ -16,7 +16,7 @@ export default function PostCreation() {
           minWidth: 800,
         }}
       >
-        <PostCreationForm />
+        <PostFormContainer />
       </Box>
     </MainContainer>
   )

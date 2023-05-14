@@ -1,10 +1,9 @@
-import CommentCard from 'entities/postComment/ui'
-import ElectionCard from 'entities/postElection/ui'
-import SuggestionCard from 'entities/postSuggestion/ui'
-import MainContainer from '../../../widgets/mainContainer/ui'
-import FloatingActionButton from 'shared/ui/floatingButton/ui'
+import CommentCard from 'components/post/Comment'
+import ElectionCard from 'components/post/Election'
+import SuggestionCard from 'components/post/Suggestion'
+import MainContainer from '../../widgets/mainContainer'
 import { useGetPostsQuery } from 'app/store/api/postApi'
-import {$api} from 'shared/api'
+import { $api } from 'shared/api'
 import { BASE_URL } from 'shared/config/consts'
 
 const Home = () => {
@@ -24,7 +23,6 @@ const Home = () => {
         <ElectionCard />
         <SuggestionCard />
         <CommentCard />
-        <FloatingActionButton />
       </MainContainer>
     </div>
   )

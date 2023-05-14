@@ -2,6 +2,8 @@ import { FC, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { FieldValues } from 'react-hook-form/dist/types'
 import { BsFillTrashFill } from 'react-icons/bs'
+import { PostFormInputs as inputs } from 'shared/model/Inputs'
+import Typography from '@mui/material/Typography'
 
 import {
   TextField,
@@ -12,12 +14,21 @@ import {
   RadioGroup,
   Radio,
 } from '@mui/material'
-import FlexContainer from 'widgets/flexContainer/ui'
+import FlexContainer from 'widgets/flexContainer'
 
-import { IInputProps, PostTypesEnum } from '../model'
-import { Console } from 'console'
+import { IInput } from 'shared/model/Types'
 
-const PostFormContainer: FC<IInputProps> = ({ inputs }) => {
+export enum PostTypesEnum {
+  COMMENT,
+  SUGGESTION,
+  ELECTION,
+}
+
+export interface IInputProps {
+  inputs: IInput[]
+}
+
+const PostFormContainer = () => {
   const [postType, setPostType] = useState<number>(0)
   const [selectedImage, setSelectedImage] = useState()
   const [preview, setPreview] = useState<string>()
@@ -149,11 +160,11 @@ const PostFormContainer: FC<IInputProps> = ({ inputs }) => {
                       align='center'
                       justify='space-between'
                     >
-                      <FormControlLabel
-                        value={variant}
-                        control={<Radio />}
-                        label={variant}
-                      />
+                      <Typography
+                        variant="subtitle1"
+                      >
+                        {index + 1}. {variant}
+                      </Typography>
                       <Button onClick={() => removeVariant(variant)}>
                         <BsFillTrashFill />
                       </Button>

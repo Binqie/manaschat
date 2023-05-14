@@ -1,11 +1,11 @@
 import { PUBLIC_ROUTES, PRIVATE_ROUTES } from '../consts'
 
-import Signin from 'pages/signin/ui'
-import Signup from 'pages/signup/ui'
-import Home from 'pages/home/ui'
-import PostCreation from 'pages/postCreation/ui'
+import Signin from 'pages/signin'
+import Signup from 'pages/signup'
+import Home from 'pages/home'
+import PostCreation from 'pages/postCreation'
 import { IRoute } from 'shared/model/Types'
-import Admin from 'pages/admin/ui'
+import Admin from 'pages/admin'
 
 export const PublicRoutes: IRoute[] = [
   {

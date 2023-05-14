@@ -14,8 +14,14 @@ import MenuItem from '@mui/material/MenuItem'
 import AdbIcon from '@mui/icons-material/Adb'
 import { Link } from 'react-router-dom'
 
-import { settings, pages } from '../model'
 
+const pages = [
+    { name: 'Sign In', link: '/signin' },
+    { name: 'Sign Up', link: '/signup' },
+    { name: 'Home', link: '/home' },
+    { name: 'Create Post', link: '/create-post' },
+]
+const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 function Navbar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(

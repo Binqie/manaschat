@@ -3,8 +3,8 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { Grid } from '@mui/material'
 
 import { IProps } from 'shared/model/Types'
-import Navbar from 'widgets/navbar/ui'
-import Footer from 'widgets/footer/ui'
+import Navbar from 'widgets/navbar'
+import Footer from 'widgets/footer'
 
 const MainContainer = ({ children }: IProps) => {
   return (

@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import { PublicRoutes, PrivateRoutes } from 'shared/config/routes'
-import Error from 'pages/error/ui'
+import Error from 'pages/error'
 import { IRoute } from 'shared/model/Types'
 
 const Router = () => {

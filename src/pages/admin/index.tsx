@@ -1,5 +1,5 @@
-import Drawer from 'widgets/drawer/ui'
-import CollapsibleTable from 'widgets/table/ui'
+import Drawer from 'widgets/drawer'
+import CollapsibleTable from 'widgets/table'
 
 const Admin = () => {
   return (

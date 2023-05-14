@@ -9,13 +9,21 @@ import Grid from '@mui/material/Grid'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import { AiFillEyeInvisible } from 'react-icons/ai'
-
-import { PUBLIC_ROUTES } from '../../../shared/config/consts'
-import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+import { Link } from 'react-router-dom'
 
-import { IUser } from '../models'
-import { SignIn } from '../models'
+import { PUBLIC_ROUTES } from 'shared/config/consts'
+import {$api} from "shared/api";
+
+interface IUser {
+    email: string
+    password: string
+}
+
+export const SignIn = async (data: IUser) => {
+    const response = await $api.post('/Users/SignIn', data)
+    console.log(response)
+}
 
 const Signin = () => {
   const {

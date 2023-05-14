@@ -1,6 +1,10 @@
 import { FC } from 'react'
-import { IProps } from '../model'
-
+interface IProps {
+    children?: React.ReactNode
+    direction?: 'row' | 'row-reverse' | 'column' | 'column-reverse'
+    justify?: string
+    align?: string
+}
 const FlexContainer: FC<IProps> = ({
   children,
   direction = 'row',
