@@ -7,10 +7,14 @@ import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import { red } from '@mui/material/colors'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
+import { IPostProps } from 'shared/model/Types'
 
-export default function CommentCard() {
+export default function CommentCard({ post }: IPostProps) {
   return (
-    <Card sx={{ maxWidth: 345 }} variant='outlined'>
+    <Card
+      sx={{ maxWidth: 345 }}
+      variant='outlined'
+    >
       <CardHeader
         avatar={
           <Avatar
@@ -25,14 +29,13 @@ export default function CommentCard() {
             <MoreVertIcon />
           </IconButton>
         }
-        title='Shrimp and Chorizo Paella'
-        subheader='September 14, 2016'
+        title={post.authorFullname}
+        subheader={`${new Date(Date.parse(post.createdAt)).toLocaleDateString()}`}
       />
       <CardMedia
         component='img'
         height='194'
-        image='https://source.unsplash.com/random'
-        alt='Paella dish'
+        image={`data:image/png;base64, ${post.image}`}
       />
       <CardContent>
         <Typography
@@ -40,9 +43,7 @@ export default function CommentCard() {
           color='text.primary'
           marginBottom='spacing'
         >
-          This impressive paella is a perfect party dish and a fun meal to cook
-          together with your guests. Add 1 cup of frozen peas along with the
-          mussels, if you like.
+          {post.body}
         </Typography>
       </CardContent>
     </Card>

@@ -14,10 +14,14 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import FormControl from '@mui/material/FormControl'
 import FormLabel from '@mui/material/FormLabel'
 import { Button } from '@mui/material'
+import { IPostProps } from 'shared/model/Types'
 
-export default function ElectionCard() {
+export default function ElectionCard({ post }: IPostProps) {
   return (
-    <Card sx={{ maxWidth: 345 }} variant='outlined'>
+    <Card
+      sx={{ maxWidth: 345 }}
+      variant='outlined'
+    >
       <CardHeader
         avatar={
           <Avatar
@@ -32,46 +36,35 @@ export default function ElectionCard() {
             <MoreVertIcon />
           </IconButton>
         }
-        title='Shrimp and Chorizo Paella'
-        subheader='September 14, 2016'
+        title={post.authorFullname}
+        subheader={`${new Date(Date.parse(post.createdAt)).toLocaleDateString()}`}
       />
       <CardMedia
         component='img'
         height='194'
-        image='https://source.unsplash.com/random'
-        alt='Paella dish'
+        image={`data:image/png;base64, ${post.image}`}
       />
       <CardContent>
         <Typography
           variant='body2'
           color='text.primary'
         >
-          This impressive paella is a perfect party dish and a fun meal to cook
-          together with your guests. Add 1 cup of frozen peas along with the
-          mussels, if you like.
+          {post.body}
         </Typography>
-        <FormControl style={{width: '100%'}}>
-          <FormLabel id='demo-radio-buttons-group-label'>Gender</FormLabel>
+        <FormControl style={{ width: '100%' }}>
           <RadioGroup
             aria-labelledby='demo-radio-buttons-group-label'
             defaultValue='female'
             name='radio-buttons-group'
           >
-            <FormControlLabel
-              value='female'
-              control={<Radio />}
-              label='Female'
-            />
-            <FormControlLabel
-              value='male'
-              control={<Radio />}
-              label='Male'
-            />
-            <FormControlLabel
-              value='other'
-              control={<Radio />}
-              label='Other'
-            />
+            {post.electionPostDetailsList.map((item) => (
+              <FormControlLabel
+                key={item.id}
+                value={item.id}
+                control={<Radio />}
+                label={item.variant}
+              />
+            ))}
           </RadioGroup>
           <Button variant='outlined'>Vote</Button>
         </FormControl>

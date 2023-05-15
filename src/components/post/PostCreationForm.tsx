@@ -16,20 +16,25 @@ import {
 } from '@mui/material'
 import FlexContainer from 'widgets/flexContainer'
 
-import { IInput } from 'shared/model/Types'
+import { IPost, PostTypesEnum } from 'shared/model/Types'
+import { $api, $postApi } from 'shared/api'
+// type PostType = Pick<IPost, 'title' | 'body' | 'image' | 'type'>
 
-export enum PostTypesEnum {
-  COMMENT,
-  SUGGESTION,
-  ELECTION,
+const SendPostRequest = async (data: any) => {
+  console.log(data)
+  return await $postApi.post('/Posts/Create', data)
 }
 
-export interface IInputProps {
-  inputs: IInput[]
+const SendElectionPostDetails = async (data: {
+  postId: number
+  variants: string[]
+}) => {
+  console.log(data)
+  return await $api.post('/Posts/CreateElectionPostDetail', data)
 }
 
 const PostFormContainer = () => {
-  const [postType, setPostType] = useState<number>(0)
+  const [postType, setPostType] = useState<string>('0')
   const [selectedImage, setSelectedImage] = useState()
   const [preview, setPreview] = useState<string>()
   const [variantsList, setVariantsList] = useState<string[]>([])
@@ -62,7 +67,7 @@ const PostFormContainer = () => {
   }
 
   const handlePostTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPostType(+(event.target as HTMLInputElement).value)
+    setPostType((event.target as HTMLInputElement).value)
   }
 
   const addVariant = (): void => {
@@ -77,13 +82,27 @@ const PostFormContainer = () => {
     setVariantsList(newList)
   }
 
-  const onSubmit = (data: FieldValues): void => {
+  const onSubmit = async (data: FieldValues) => {
     const post = {
-      ...data,
+      body: data.body,
+      title: data.title,
       image: selectedImage,
-      type: postType,
+      type: +postType,
     }
-    console.log('data', post)
+    console.log(selectedImage)
+
+    const response = await SendPostRequest(post)
+    console.log(response)
+
+    const electionPostDetails = {
+      postId: response.data,
+      variants: variantsList,
+    }
+
+    if (postType === '2') {
+      const result = await SendElectionPostDetails(electionPostDetails)
+      console.log(result)
+    }
   }
 
   return (
@@ -145,7 +164,7 @@ const PostFormContainer = () => {
               />
             </RadioGroup>
           </FormControl>
-          {postType === 2 && {
+          {postType === '2' && {
             ...(
               <FormControl style={{ width: '100%' }}>
                 <FormLabel>Variants</FormLabel>
@@ -160,9 +179,7 @@ const PostFormContainer = () => {
                       align='center'
                       justify='space-between'
                     >
-                      <Typography
-                        variant="subtitle1"
-                      >
+                      <Typography variant='subtitle1'>
                         {index + 1}. {variant}
                       </Typography>
                       <Button onClick={() => removeVariant(variant)}>

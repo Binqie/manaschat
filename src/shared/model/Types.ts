@@ -59,10 +59,10 @@ export interface IStoreUser {
 
 export interface IPost {
   id: number
-  createdAt: Date
+  createdAt: string
   title: string
   body: string
-  image: string
+  image: string | undefined
   type: number
   electionPostDetailsList: [
     {
@@ -87,8 +87,22 @@ export interface IPost {
     }
   ]
   authorId: number
+  authorFullname: string
 }
 
+export interface IPostProps {
+  post: IPost
+}
+
+export enum PostTypesEnum {
+  COMMENT,
+  SUGGESTION,
+  ELECTION,
+}
+
+export interface IInputProps {
+  inputs: IInput[]
+}
 
 export interface IStore {
   user: IStoreUser

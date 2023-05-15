@@ -13,15 +13,19 @@ import { Button } from '@mui/material'
 import { FormControlLabel, Radio, RadioGroup } from '@mui/material'
 import FormControl from '@mui/material/FormControl'
 import FormLabel from '@mui/material/FormLabel'
+import { IPostProps } from 'shared/model/Types'
 
-export default function SuggestionCard() {
+export default function SuggestionCard({ post }: IPostProps) {
   const [selectedValue, setSelectedValue] = React.useState('yes')
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedValue(event.target.value)
   }
   return (
-    <Card sx={{ maxWidth: 345 }} variant='outlined'>
+    <Card
+      sx={{ maxWidth: 345 }}
+      variant='outlined'
+    >
       <CardHeader
         avatar={
           <Avatar
@@ -36,26 +40,22 @@ export default function SuggestionCard() {
             <MoreVertIcon />
           </IconButton>
         }
-        title='Shrimp and Chorizo Paella'
-        subheader='September 14, 2016'
+        title={post.authorFullname}
+        subheader={`${new Date(Date.parse(post.createdAt)).toLocaleDateString()}`}
       />
       <CardMedia
         component='img'
         height='194'
-        image='https://source.unsplash.com/random'
-        alt='Paella dish'
+        image={`data:image/png;base64, ${post.image}`}
       />
       <CardContent>
         <Typography
           variant='body2'
           color='text.primary'
         >
-          This impressive paella is a perfect party dish and a fun meal to cook
-          together with your guests. Add 1 cup of frozen peas along with the
-          mussels, if you like.
+          {post.body}
         </Typography>
-        <FormControl style={{width: '100%'}}>
-          <FormLabel id='demo-controlled-radio-buttons-group'>Poll</FormLabel>
+        <FormControl style={{ width: '100%' }}>
           <RadioGroup
             aria-labelledby='demo-controlled-radio-buttons-group'
             name='controlled-radio-buttons-group'

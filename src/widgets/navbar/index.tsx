@@ -18,7 +18,6 @@ import { Link } from 'react-router-dom'
 const pages = [
     { name: 'Sign In', link: '/signin' },
     { name: 'Sign Up', link: '/signup' },
-    { name: 'Home', link: '/home' },
     { name: 'Create Post', link: '/create-post' },
 ]
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']

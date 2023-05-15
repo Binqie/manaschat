@@ -9,7 +9,7 @@ import Grid from '@mui/material/Grid'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import Select from 'react-select'
 
@@ -29,6 +29,7 @@ import { ISelectCollection, IUser } from 'shared/model/Types'
 
 const Signup = () => {
   const dispatch = useAppDispatch()
+  const [responseStatus, setResponseStatus] = useState<number>(0)
   const [selectedFaculty, setSelectedFaculty] = useState<IFaculty | null>(null)
   const [selectedDepartment, setSelectedDepartment] =
     useState<IDepartment | null>(null)
@@ -37,9 +38,13 @@ const Signup = () => {
     null
   )
 
-  const faculties: ISelectCollection = useAppSelector((state) => state.user.faculties)
-  const departments: ISelectCollection = useAppSelector((state) => state.user.departments)
-  
+  const faculties: ISelectCollection = useAppSelector(
+    (state) => state.user.faculties
+  )
+  const departments: ISelectCollection = useAppSelector(
+    (state) => state.user.departments
+  )
+
   const {
     register,
     formState: { errors },
@@ -59,6 +64,7 @@ const Signup = () => {
     }
 
     const response = await SignUp(userInfo)
+    setResponseStatus(response.status)
     console.log('response', response)
   }
 
@@ -66,6 +72,10 @@ const Signup = () => {
     dispatch(fetchFaculties())
     dispatch(fetchDepartments())
   }, [])
+
+  if (responseStatus === 200) {
+    return <Navigate to={PUBLIC_ROUTES.CONFIRM} />
+  }
 
   return (
     <Grid

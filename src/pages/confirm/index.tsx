@@ -39,7 +39,7 @@ const Confirm = () => {
 
   if (confirmationBody) {
     console.log('navigate')
-    return <Navigate to={PUBLIC_ROUTES.SIGNIN} />
+    return <Navigate to={PRIVATE_ROUTES.HOME} />
   }
 
   return (
@@ -97,8 +97,9 @@ const Confirm = () => {
           <Typography
             component='h1'
             variant='h5'
+            padding={7}
           >
-            Confirm your account
+            An email confirmation was sent to your account. Please, write code to form below.
           </Typography>
           <Box
             component='form'
