@@ -6,14 +6,12 @@ import { ISelectCollection } from 'shared/model/Types'
 
 interface UserState {
   isAuthorized: Boolean
-  user: Object
   faculties: ISelectCollection
   departments: ISelectCollection
 }
 
 const initialState: UserState = {
-  isAuthorized: false,
-  user: {},
+  isAuthorized: true,
   faculties: {
     name: 'faculties',
     selects: [],
@@ -31,14 +29,14 @@ export const UserSlice = createSlice({
     setAuthorized: (state, action: PayloadAction<Boolean>) => {
       state.isAuthorized = action.payload
     },
-    setUser: (state, action: PayloadAction<Object>) => {
-      state.user = action.payload
-    },
     setFaculties: (state, action) => {
       state.faculties.selects = action.payload
     },
     setDepartments: (state, action) => {
       state.departments.selects = action.payload
+    },
+    logout: (state) => {
+      state.isAuthorized = false
     },
   },
   extraReducers: (builder) => {
@@ -83,7 +81,6 @@ export const fetchDepartments = createAsyncThunk(
   }
 )
 
-export const { setAuthorized, setUser, setFaculties, setDepartments } =
-  UserSlice.actions
+export const { setAuthorized, setFaculties, setDepartments, logout } = UserSlice.actions
 
 export default UserSlice.reducer

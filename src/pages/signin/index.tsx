@@ -11,7 +11,7 @@ import { AiFillEyeInvisible } from 'react-icons/ai'
 import { useForm } from 'react-hook-form'
 import { Link, Navigate } from 'react-router-dom'
 
-import { PRIVATE_ROUTES, PUBLIC_ROUTES } from 'shared/config/consts'
+import { BASE_URL, PRIVATE_ROUTES, PUBLIC_ROUTES } from 'shared/config/consts'
 import { $api } from 'shared/api'
 import { useSelector } from 'react-redux'
 import { setAuthorized } from 'app/store/slices/UserSlice'
@@ -21,8 +21,7 @@ import { IStore, IUser } from 'shared/model/Types'
 type ISigninUser = Pick<IUser, 'email' | 'password'>
 
 export const SignIn = async (data: ISigninUser) => {
-  const response = await $api.post('/Users/SignIn', data)
-  return response
+  return await $api.post('/Users/SignIn', data)
 }
 
 const Signin = () => {
@@ -49,10 +48,10 @@ const Signin = () => {
     }
   }
 
-  if (isAuthorized) {
-    console.log('navigate')
-    return <Navigate to={PRIVATE_ROUTES.HOME}/>
-  }
+  // if (isAuthorized) {
+  //   console.log('navigate')
+  //   return <Navigate to={PRIVATE_ROUTES.HOME} />
+  // }
 
   return (
     <Grid

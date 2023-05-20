@@ -92,6 +92,7 @@ export interface IPost {
 
 export interface IPostProps {
   post: IPost
+  isButtonHidden?: boolean
 }
 
 export enum PostTypesEnum {

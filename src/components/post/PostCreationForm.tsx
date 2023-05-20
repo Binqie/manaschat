@@ -18,6 +18,8 @@ import FlexContainer from 'widgets/flexContainer'
 
 import { IPost, PostTypesEnum } from 'shared/model/Types'
 import { $api, $postApi } from 'shared/api'
+import { Navigate } from 'react-router-dom'
+import { PRIVATE_ROUTES } from 'shared/config/consts'
 // type PostType = Pick<IPost, 'title' | 'body' | 'image' | 'type'>
 
 const SendPostRequest = async (data: any) => {
@@ -33,12 +35,13 @@ const SendElectionPostDetails = async (data: {
   return await $api.post('/Posts/CreateElectionPostDetail', data)
 }
 
-const PostFormContainer = () => {
+const PostCreationForm = () => {
   const [postType, setPostType] = useState<string>('0')
   const [selectedImage, setSelectedImage] = useState()
   const [preview, setPreview] = useState<string>()
   const [variantsList, setVariantsList] = useState<string[]>([])
   const [variant, setVariant] = useState<string>('')
+  const [status, setStatus] = useState(0)
 
   const {
     register,
@@ -92,6 +95,7 @@ const PostFormContainer = () => {
     console.log(selectedImage)
 
     const response = await SendPostRequest(post)
+    setTimeout(() => setStatus(response.status), 2000)
     console.log(response)
 
     const electionPostDetails = {
@@ -103,6 +107,10 @@ const PostFormContainer = () => {
       const result = await SendElectionPostDetails(electionPostDetails)
       console.log(result)
     }
+  }
+
+  if (status === 200) {
+    return <Navigate to={PRIVATE_ROUTES.HOME} />
   }
 
   return (
@@ -215,4 +223,4 @@ const PostFormContainer = () => {
   )
 }
 
-export default PostFormContainer
+export default PostCreationForm

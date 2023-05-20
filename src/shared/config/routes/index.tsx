@@ -3,11 +3,12 @@ import { PUBLIC_ROUTES, PRIVATE_ROUTES } from '../consts'
 import Signin from 'pages/signin'
 import Signup from 'pages/signup'
 import Home from 'pages/home'
-import PostCreation from 'pages/postCreation'
 import { IRoute } from 'shared/model/Types'
 import Admin from 'pages/admin'
 import Confirm from 'pages/confirm'
 import ResetPassword from 'pages/resetPassword'
+import PostCreation from 'pages/postCreation'
+import PostEdition from 'pages/postEdition'
 
 export const PublicRoutes: IRoute[] = [
   {
@@ -36,6 +37,10 @@ export const PrivateRoutes: IRoute[] = [
   {
     path: PRIVATE_ROUTES.POST_CREATION,
     element: <PostCreation />,
+  },
+  {
+    path: PRIVATE_ROUTES.POST_EDITING,
+    element: <PostEdition />,
   },
   {
     path: PRIVATE_ROUTES.ADMIN,

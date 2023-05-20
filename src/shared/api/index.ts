@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { BASE_URL } from '../config/consts'
-import Cookies from 'js-cookie'
 
 export const $api = axios.create({
   baseURL: BASE_URL,

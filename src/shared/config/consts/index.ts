@@ -4,11 +4,12 @@ export const PUBLIC_ROUTES = {
   SIGNIN: '/signin',
   SIGNUP: '/signup',
   CONFIRM: '/confirm',
-  RESET_PASSWORD: '/password/forgot'
+  RESET_PASSWORD: '/password/forgot',
 }
 
 export const PRIVATE_ROUTES = {
-    HOME: '/',
-    POST_CREATION: '/create-post',
-    ADMIN: '/admin'
+  HOME: '/',
+  POST_CREATION: '/create-post',
+  POST_EDITING: '/edit-post',
+  ADMIN: '/admin',
 }

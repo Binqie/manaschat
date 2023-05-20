@@ -12,16 +12,24 @@ import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import AdbIcon from '@mui/icons-material/Adb'
-import { Link } from 'react-router-dom'
-
+import { Await, Link } from 'react-router-dom'
+import { BASE_URL } from 'shared/config/consts'
+import { $api } from 'shared/api'
+import { useAppDispatch } from 'shared/hooks'
+import { logout } from 'app/store/slices/UserSlice'
 
 const pages = [
-    { name: 'Sign In', link: '/signin' },
-    { name: 'Sign Up', link: '/signup' },
-    { name: 'Create Post', link: '/create-post' },
+  { name: 'Sign In', link: '/signin' },
+  { name: 'Sign Up', link: '/signup' },
+  { name: 'Create Post', link: '/create-post' },
 ]
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
+
+const SendLogoutRequest = async () => {
+  return await $api.get(`${BASE_URL}/Users/LogOut`)
+}
+
 function Navbar() {
+  const dispatch = useAppDispatch()
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
@@ -40,6 +48,12 @@ function Navbar() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null)
+  }
+
+  const handleLogOut = () => {
+    const response = SendLogoutRequest()
+    dispatch(logout())
+    console.log(response)
   }
 
   return (
@@ -173,14 +187,12 @@ function Navbar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem
-                  key={setting}
-                  onClick={handleCloseUserMenu}
-                >
-                  <Typography textAlign='center'>{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem>
+                <Typography textAlign='center'>Profile</Typography>
+              </MenuItem>
+              <MenuItem onClick={handleLogOut}>
+                <Typography textAlign='center'>Logout</Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>

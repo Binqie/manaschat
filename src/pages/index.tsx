@@ -1,9 +1,11 @@
 import { Routes, Route } from 'react-router-dom'
 import { PublicRoutes, PrivateRoutes } from 'shared/config/routes'
-import Error from 'pages/error'
 import { IRoute } from 'shared/model/Types'
+import { useAppSelector } from 'shared/hooks'
+import Signin from './signin'
 
 const Router = () => {
+  const isAuthorized = useAppSelector((store) => store.user.isAuthorized)
   return (
     <Routes>
       {PublicRoutes.map(({ path, element }: IRoute) => (
@@ -13,16 +15,17 @@ const Router = () => {
           element={element}
         />
       ))}
-      {PrivateRoutes.map(({ path, element }: IRoute) => (
-        <Route
-          key={path}
-          path={path}
-          element={element}
-        />
-      ))}
+      {isAuthorized &&
+        PrivateRoutes.map(({ path, element }: IRoute) => (
+          <Route
+            key={path}
+            path={path}
+            element={element}
+          />
+        ))}
       <Route
         path='*'
-        element={<Error />}
+        element={<Signin />}
       />
     </Routes>
   )
