@@ -13,40 +13,47 @@ import Paper from '@mui/material/Paper'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import MyButton from 'ui/button'
+import { IRequest, IUser } from 'shared/model/Types'
+import { Button } from '@mui/material'
+import { $api } from 'shared/api'
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-  price: number
-) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-    price,
-    history: [
-      {
-        date: '2020-01-05',
-        customerId: '11091700',
-        amount: 3,
-      },
-      {
-        date: '2020-01-02',
-        customerId: 'Anonymous',
-        amount: 1,
-      },
-    ],
-  }
+const SendExecuteChangeGroupRequest = async (id: number) => {
+  return await $api.put(`/Requests/ExecuteChangeGroupRequest?id=${id}`)
+}
+const SendDeleteChangeGroupRequest = async (id: number) => {
+  return await $api.delete(`/Requests/Delete?id=${id}`)
 }
 
-function Row(props: { row: ReturnType<typeof createData> }) {
-  const { row } = props
+const SendActivateUserRequest = async (email: string) => {
+  return await $api.get(`/Users/Activate?email=${email}`)
+}
+
+const SendDeleteUserRequest = async (id: number) => {
+  return await $api.delete(`/Users/Delete?id=${id}`)
+}
+
+function Row(props: { row: any; openedTab: string }) {
   const [open, setOpen] = React.useState(false)
+
+  const handleAcceptRequest = async () => {
+    const response = await SendExecuteChangeGroupRequest(props.row.id)
+    console.log('accept request', response)
+  }
+
+  const handleDeleteRequest = async () => {
+    const response = await SendDeleteChangeGroupRequest(props.row.id)
+    console.log('reject request', response)
+  }
+
+  const handleDeleteUser = async () => {
+    const response = await SendDeleteUserRequest(props.row.id)
+    console.log('delete user', response)
+  }
+
+  const handleActivateUser = async () => {
+    const response = await SendActivateUserRequest(props.row.email)
+    console.log('activate user', response)
+  }
 
   return (
     <React.Fragment>
@@ -64,19 +71,33 @@ function Row(props: { row: ReturnType<typeof createData> }) {
           component='th'
           scope='row'
         >
-          {row.name}
+          {props.row.email}
         </TableCell>
         <TableCell align='right'>
-          <MyButton
+          <Button
+            variant='outlined'
             color='success'
-            text='+'
-          />
+            onClick={
+              props.openedTab === 'users'
+                ? handleActivateUser
+                : handleAcceptRequest
+            }
+          >
+            {props.openedTab === 'users' ? 'Activate' : 'Accept'}
+          </Button>
         </TableCell>
         <TableCell align='right'>
-          <MyButton
+          <Button
+            variant='outlined'
             color='error'
-            text='-'
-          />
+            onClick={
+              props.openedTab === 'users'
+                ? handleDeleteUser
+                : handleDeleteRequest
+            }
+          >
+            {props.openedTab === 'users' ? 'Delete' : 'Reject'}
+          </Button>
         </TableCell>
       </TableRow>
       <TableRow>
@@ -95,7 +116,7 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                 gutterBottom
                 component='div'
               >
-                History
+                Request
               </Typography>
               <Table
                 size='small'
@@ -103,28 +124,19 @@ function Row(props: { row: ReturnType<typeof createData> }) {
               >
                 <TableHead>
                   <TableRow>
+                    <TableCell>New course</TableCell>
+                    <TableCell>New Classroom</TableCell>
+                    <TableCell>User email</TableCell>
                     <TableCell>Date</TableCell>
-                    <TableCell>Customer</TableCell>
-                    <TableCell align='right'>Amount</TableCell>
-                    <TableCell align='right'>Total price ($)</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
-                      <TableCell
-                        component='th'
-                        scope='row'
-                      >
-                        {historyRow.date}
-                      </TableCell>
-                      <TableCell>{historyRow.customerId}</TableCell>
-                      <TableCell align='right'>{historyRow.amount}</TableCell>
-                      <TableCell align='right'>
-                        {Math.round(historyRow.amount * row.price * 100) / 100}
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  <TableRow>
+                    <TableCell>{props.row.course}</TableCell>
+                    <TableCell>{props.row.classroom}</TableCell>
+                    <TableCell>{props.row.email}</TableCell>
+                    <TableCell>{props.row.createdAt}</TableCell>
+                  </TableRow>
                 </TableBody>
               </Table>
             </Box>
@@ -135,29 +147,25 @@ function Row(props: { row: ReturnType<typeof createData> }) {
   )
 }
 
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 3.99),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 4.99),
-  createData('Eclair', 262, 16.0, 24, 6.0, 3.79),
-  createData('Cupcake', 305, 3.7, 67, 4.3, 2.5),
-  createData('Gingerbread', 356, 16.0, 49, 3.9, 1.5),
-]
-
-export default function CollapsibleTable() {
+export default function CollapsibleTable({ data, openedTab }: any) {
+  if (openedTab === 'users') {
+    data = data.filter((item: any) => !item.isActive)
+  }
+  console.log(data, openedTab)
   return (
     <TableContainer component={Paper}>
       <Table aria-label='collapsible table'>
         <TableHead>
           <TableRow>
-            <TableCell />
-            <TableCell>Student</TableCell>
+            <TableCell>{openedTab}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {data.map((item: any) => (
             <Row
-              key={row.name}
-              row={row}
+              openedTab={openedTab}
+              key={item.id}
+              row={item}
             />
           ))}
         </TableBody>

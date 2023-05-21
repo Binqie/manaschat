@@ -9,6 +9,7 @@ import Confirm from 'pages/confirm'
 import ResetPassword from 'pages/resetPassword'
 import PostCreation from 'pages/postCreation'
 import PostEdition from 'pages/postEdition'
+import ProfilePage from 'pages/profile'
 
 export const PublicRoutes: IRoute[] = [
   {
@@ -45,5 +46,9 @@ export const PrivateRoutes: IRoute[] = [
   {
     path: PRIVATE_ROUTES.ADMIN,
     element: <Admin />,
+  },
+  {
+    path: PRIVATE_ROUTES.PROFILE,
+    element: <ProfilePage />,
   },
 ]

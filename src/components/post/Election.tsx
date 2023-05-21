@@ -206,6 +206,7 @@ export default function ElectionCard({
             <BiCommentAdd size={28} />
           </Button>
           <PostModal
+            postId={post.id}
             isOpen={isModalOpen}
             handleModalClose={handleModalClose}
           >

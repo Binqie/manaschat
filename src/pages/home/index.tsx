@@ -10,6 +10,8 @@ import { IPost, PostTypesEnum } from 'shared/model/Types'
 
 import { setPosts } from 'app/store/slices/PostSlice'
 import { useAppDispatch, useAppSelector } from 'shared/hooks'
+import { GetUserIdByCookies } from 'shared/lib/getUserIdByCookies'
+import { setUser } from 'app/store/slices/UserSlice'
 
 const Home = () => {
   const dispatch = useAppDispatch()

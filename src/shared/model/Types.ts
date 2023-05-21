@@ -5,6 +5,7 @@ export interface IProps {
 export interface IRoute {
   path: string
   element: React.ReactNode
+  children?: IRoute[]
 }
 
 export interface IInput {
@@ -41,13 +42,17 @@ export interface ISelectCollection {
 
 export interface IUser {
   email: string
-  password: string
+  password?: string
   fullname: string
   facultyId: number
   departmentId: number
   classroom: number | null
   course: number
   yearOfAdmission: number
+  groupEntryYear?: number
+  type?: number
+  isActive?: boolean
+  isVerify?: boolean
 }
 
 export interface IStoreUser {
@@ -55,6 +60,16 @@ export interface IStoreUser {
   user: object
   faculties: ISelectCollection
   departments: ISelectCollection
+}
+
+export interface IComment {
+  author?: null
+  authorId: number
+  createdAt?: string
+  id: number
+  post?: null
+  postId: number
+  text: string
 }
 
 export interface IPost {
@@ -108,4 +123,12 @@ export interface IInputProps {
 export interface IStore {
   user: IStoreUser
   posts: IPost
+}
+
+export interface IRequest {
+  classroom: number
+  course: number
+  createdAt: string
+  email: string
+  id: number
 }

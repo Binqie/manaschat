@@ -40,7 +40,10 @@ const CreateSuggestionPostResult = async (data: ISuggestionPostResult) => {
   )
 }
 
-export default function SuggestionCard({ post, isButtonHidden = false }: IPostProps) {
+export default function SuggestionCard({
+  post,
+  isButtonHidden = false,
+}: IPostProps) {
   const dispatch = useAppDispatch()
   const [selectedValue, setSelectedValue] = useState(
     post.suggestionPostResultsList.filter(
@@ -224,6 +227,7 @@ export default function SuggestionCard({ post, isButtonHidden = false }: IPostPr
             <BiCommentAdd size={28} />
           </Button>
           <PostModal
+            postId={post.id}
             isOpen={isModalOpen}
             handleModalClose={handleModalClose}
           >

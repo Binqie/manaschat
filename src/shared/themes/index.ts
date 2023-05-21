@@ -21,7 +21,7 @@ export const lightTheme: ThemeOptions = createTheme({
       secondary: '#0d47a1',
     },
   },
-  spacing: 5
+  spacing: 5,
 })
 
 export const darkTheme: ThemeOptions = createTheme({
@@ -44,5 +44,5 @@ export const darkTheme: ThemeOptions = createTheme({
       secondary: '#0d47a1',
     },
   },
-  spacing: 5
+  spacing: 5,
 })

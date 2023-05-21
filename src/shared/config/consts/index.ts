@@ -12,4 +12,5 @@ export const PRIVATE_ROUTES = {
   POST_CREATION: '/create-post',
   POST_EDITING: '/edit-post',
   ADMIN: '/admin',
+  PROFILE: '/profile',
 }

@@ -13,10 +13,12 @@ import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import AdbIcon from '@mui/icons-material/Adb'
 import { Await, Link } from 'react-router-dom'
-import { BASE_URL } from 'shared/config/consts'
+import { BASE_URL, PRIVATE_ROUTES } from 'shared/config/consts'
 import { $api } from 'shared/api'
 import { useAppDispatch } from 'shared/hooks'
 import { logout } from 'app/store/slices/UserSlice'
+import { FormControlLabel } from '@mui/material'
+import ThemeSwitcher from 'ui/themeSwitch'
 
 const pages = [
   { name: 'Sign In', link: '/signin' },
@@ -65,7 +67,7 @@ function Navbar() {
             variant='h6'
             noWrap
             component='a'
-            href='/'
+            href={PRIVATE_ROUTES.HOME}
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -128,7 +130,7 @@ function Navbar() {
             variant='h5'
             noWrap
             component='a'
-            href=''
+            href={PRIVATE_ROUTES.HOME}
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -158,7 +160,9 @@ function Navbar() {
               </Button>
             ))}
           </Box>
-
+          <Box>
+            <ThemeSwitcher />
+          </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title='Open settings'>
               <IconButton
@@ -188,7 +192,12 @@ function Navbar() {
               onClose={handleCloseUserMenu}
             >
               <MenuItem>
-                <Typography textAlign='center'>Profile</Typography>
+                <Link
+                  to={PRIVATE_ROUTES.PROFILE}
+                  style={{ textDecoration: 'none', color: 'gray' }}
+                >
+                  <Typography textAlign='center'>Profile</Typography>
+                </Link>
               </MenuItem>
               <MenuItem onClick={handleLogOut}>
                 <Typography textAlign='center'>Logout</Typography>

@@ -1,0 +1,166 @@
+import {
+  Box,
+  Button,
+  List,
+  ListItem,
+  ListItemText,
+  MenuItem,
+  Typography,
+  Select,
+  FormControl,
+  InputLabel,
+  TextField,
+} from '@mui/material'
+
+import {
+  fetchDepartments,
+  fetchFaculties,
+  setUser,
+} from 'app/store/slices/UserSlice'
+import SendIcon from '@mui/icons-material/Send'
+import { useEffect, useState } from 'react'
+
+import { $api } from 'shared/api'
+import { useAppDispatch, useAppSelector } from 'shared/hooks'
+import { GetUserIdByCookies } from 'shared/lib/getUserIdByCookies'
+import MainContainer from 'widgets/mainContainer'
+
+const GetUserById = async () => {
+  return await $api.get(`/Users/Get?id=${GetUserIdByCookies()}`)
+}
+
+const SendChangeGroupRequest = async (data: {
+  course: number
+  classroom: number | null
+}) => {
+  return await $api.post('/Requests/SendChangeGroupRequest', data)
+}
+
+const ProfilePage = () => {
+  const dispatch = useAppDispatch()
+  const user = useAppSelector((store) => store.user.user)
+  const faculties = useAppSelector((store) => store.user.faculties.selects)
+  const departments = useAppSelector((store) => store.user.departments.selects)
+
+  const courseOptions = [0, 1, 2, 3, 4, 5]
+  const [selectedCourse, setSelectedCourse] = useState<number>(0)
+  const [selectedClassroom, setSelectedClassroom] = useState<number | null>(
+    null
+  )
+
+  const userFaculty = faculties.filter(
+    (item) => item.value === user.facultyId
+  )[0]
+  const userDepartment = departments.filter(
+    (item) => item.value === user.departmentId
+  )[0]
+
+  useEffect(() => {
+    dispatch(fetchFaculties())
+    dispatch(fetchDepartments())
+    getUserInfo()
+  }, [])
+
+  const getUserInfo = async () => {
+    const response = await GetUserById()
+    dispatch(setUser(response.data))
+  }
+
+  const handleSubmit = async () => {
+    const data = {
+      course: selectedCourse,
+      classroom: selectedClassroom,
+    }
+
+    const response = await SendChangeGroupRequest(data)
+    console.log(response)
+  }
+
+  return (
+    <MainContainer>
+      <Box mt={'-200px'}>
+        <List dense={false}>
+          <ListItem>
+            <ListItemText
+              primary='Full name'
+              secondary={user.fullname}
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemText
+              primary='Email'
+              secondary={user.email}
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemText
+              primary='Course'
+              secondary={user.course}
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemText
+              primary='Faculty'
+              secondary={userFaculty?.label}
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemText
+              primary='Department'
+              secondary={userDepartment?.label}
+            />
+          </ListItem>
+        </List>
+        <Box>
+          <Typography
+            variant='h5'
+            gutterBottom
+          >
+            Change course or classroom
+          </Typography>
+          <FormControl sx={{ m: 1, minWidth: 120 }}>
+            <InputLabel id='demo-simple-select-disabled-label'>
+              Course
+            </InputLabel>
+            <Select
+              labelId='demo-select-small-label'
+              id='demo-select-small'
+              value={selectedCourse}
+              label='Course'
+              onChange={(e) => setSelectedCourse(+e.target.value)}
+              sx={{ width: '100%' }}
+              size='medium'
+            >
+              {courseOptions.map((item) => (
+                <MenuItem value={item}>{item}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl sx={{ m: 1, minWidth: 120 }}>
+            <TextField
+              type='number'
+              disabled={selectedCourse !== 0}
+              id='demo-select-small'
+              value={selectedClassroom}
+              label='Classroom'
+              onChange={(e) => setSelectedClassroom(+e.target.value)}
+              sx={{ width: '100%' }}
+              size='medium'
+            />
+          </FormControl>
+          <Button
+            sx={{ marginTop: '5px' }}
+            variant='contained'
+            endIcon={<SendIcon />}
+            onClick={handleSubmit}
+            size='large'
+          >
+            Send
+          </Button>
+        </Box>
+      </Box>
+    </MainContainer>
+  )
+}
+
+export default ProfilePage

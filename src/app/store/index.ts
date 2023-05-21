@@ -1,11 +1,13 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
 import UserSlice from './slices/UserSlice'
 import PostSlice from './slices/PostSlice'
+import ThemeSlice from './slices/ThemeSlice'
 
 export const store = configureStore({
   reducer: {
     user: UserSlice,
-    posts: PostSlice
+    posts: PostSlice,
+    theme: ThemeSlice,
   },
 })
 

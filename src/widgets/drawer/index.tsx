@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Drawer from '@mui/material/Drawer'
@@ -17,6 +17,7 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import InboxIcon from '@mui/icons-material/MoveToInbox'
 import MailIcon from '@mui/icons-material/Mail'
+import { Link } from 'react-router-dom'
 
 const drawerWidth = 240
 
@@ -45,6 +46,8 @@ interface AppBarProps extends MuiAppBarProps {
 
 interface IDrawer {
   children: React.ReactNode
+  handleUsersTabOpen: () => void
+  handleRequestsTabOpen: () => void
 }
 
 const AppBar = styled(MuiAppBar, {
@@ -72,8 +75,12 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }))
 
-export default function PersistentDrawerLeft({ children }: IDrawer) {
-  const [open, setOpen] = React.useState(false)
+export default function PersistentDrawerLeft({
+  children,
+  handleUsersTabOpen,
+  handleRequestsTabOpen,
+}: IDrawer) {
+  const [open, setOpen] = useState(false)
 
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -133,15 +140,16 @@ export default function PersistentDrawerLeft({ children }: IDrawer) {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+          {['requests', 'users'].map((text, index) => (
             <ListItem
               key={text}
               disablePadding
             >
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
+              <ListItemButton
+                onClick={
+                  text === 'users' ? handleUsersTabOpen : handleRequestsTabOpen
+                }
+              >
                 <ListItemText primary={text} />
               </ListItemButton>
             </ListItem>
