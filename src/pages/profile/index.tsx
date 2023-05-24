@@ -36,6 +36,12 @@ const SendChangeGroupRequest = async (data: {
   return await $api.post('/Requests/SendChangeGroupRequest', data)
 }
 
+const fieldStyles = {
+  borderRadius: '10px',
+  border: '1px solid gray',
+  p: '5px 10px',
+}
+
 const ProfilePage = () => {
   const dispatch = useAppDispatch()
   const user = useAppSelector((store) => store.user.user)
@@ -78,36 +84,50 @@ const ProfilePage = () => {
 
   return (
     <MainContainer>
-      <Box mt={'-200px'}>
+      <Box
+        mt={'-200px'}
+        p={5}
+        sx={{ border: '1px solid gray', borderRadius: '10px' }}
+      >
         <List dense={false}>
           <ListItem>
-            <ListItemText
-              primary='Full name'
-              secondary={user.fullname}
+            <TextField
+              id='outlined-disabled'
+              label='Name'
+              value={user.fullname}
             />
           </ListItem>
           <ListItem>
-            <ListItemText
-              primary='Email'
-              secondary={user.email}
+            <TextField
+              id='outlined-disabled'
+              label='Email'
+              value={user.email}
             />
           </ListItem>
           <ListItem>
-            <ListItemText
-              primary='Course'
-              secondary={user.course}
+            <TextField
+              id='outlined-disabled'
+              label='Course'
+              value={user.course}
             />
           </ListItem>
           <ListItem>
-            <ListItemText
-              primary='Faculty'
-              secondary={userFaculty?.label}
+            <TextField
+              id='outlined-disabled'
+              label='Faculty'
+              value={
+                faculties.find((item) => item.value === user.facultyId)?.label
+              }
             />
           </ListItem>
           <ListItem>
-            <ListItemText
-              primary='Department'
-              secondary={userDepartment?.label}
+            <TextField
+              id='outlined-disabled'
+              label='Department'
+              value={
+                departments.find((item) => item.value === user.departmentId)
+                  ?.label
+              }
             />
           </ListItem>
         </List>

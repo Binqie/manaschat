@@ -20,12 +20,13 @@ import { fetchDepartments, fetchFaculties } from 'app/store/slices/UserSlice'
 import { IDepartment, IFaculty } from 'shared/model/Types'
 import { SignupInputs as inputs } from 'shared/model/Inputs'
 
-const SignUp = async (data: IUser) => {
+const SignUp = async (data: UserType) => {
   const response = await $api.post('/Users/SignUp', data)
   return response
 }
 
 import { ISelectCollection, IUser } from 'shared/model/Types'
+type UserType = Omit<IUser, 'id'>
 
 const Signup = () => {
   const dispatch = useAppDispatch()
@@ -52,7 +53,7 @@ const Signup = () => {
   } = useForm({ mode: 'onTouched' })
 
   const onSubmit = async (data: any) => {
-    const userInfo: IUser = {
+    const userInfo: UserType = {
       email: data.email,
       password: data.password,
       fullname: data.fullname,
@@ -90,7 +91,7 @@ const Signup = () => {
         sm={4}
         md={7}
         sx={{
-          backgroundImage: 'url(https://source.unsplash.com/random)',
+          backgroundImage: `url(http://students.manas.edu.kg/upload/userfiles/images/6bd34dfc5f938d13670a3a4a161b2ca1.jpg)`,
           backgroundRepeat: 'no-repeat',
           backgroundColor: (t) =>
             t.palette.mode === 'light'

@@ -17,6 +17,7 @@ import { useSelector } from 'react-redux'
 import { setAuthorized } from 'app/store/slices/UserSlice'
 import { useAppDispatch } from 'shared/hooks'
 import { IStore, IUser } from 'shared/model/Types'
+import Cookies from 'js-cookie'
 
 type ISigninUser = Pick<IUser, 'email' | 'password'>
 
@@ -48,10 +49,10 @@ const Signin = () => {
     }
   }
 
-  // if (isAuthorized) {
-  //   console.log('navigate')
-  //   return <Navigate to={PRIVATE_ROUTES.HOME} />
-  // }
+  if (isAuthorized || Cookies.get('.AspNetCore.Cookies')) {
+    console.log('navigate')
+    return <Navigate to={PRIVATE_ROUTES.HOME} />
+  }
 
   return (
     <Grid
@@ -66,7 +67,7 @@ const Signin = () => {
         sm={4}
         md={7}
         sx={{
-          backgroundImage: 'url(https://source.unsplash.com/random)',
+          backgroundImage: 'url(https://www.manas.edu.kg/images/bina/2.jpg)',
           backgroundRepeat: 'no-repeat',
           backgroundColor: (t) =>
             t.palette.mode === 'light'

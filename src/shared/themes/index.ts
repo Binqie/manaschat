@@ -28,20 +28,21 @@ export const darkTheme: ThemeOptions = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      light: '#757ce8',
-      main: '#3f50b5',
-      dark: '#002884',
-      contrastText: '#fff',
+      main: '#2b2a2a',
+      dark: '#777676',
+      contrastText: '#ffffff',
     },
     secondary: {
-      light: '#ff7961',
-      main: '#f44336',
-      dark: '#ba000d',
-      contrastText: '#000',
+      main: '#e54203',
+      contrastText: '#000000',
     },
     text: {
-      primary: '#616161',
-      secondary: '#0d47a1',
+      primary: '#fbf7f7',
+      secondary: '#ce4009',
+    },
+    background: {
+      paper: '#232222',
+      default: '#201f1f',
     },
   },
   spacing: 5,

@@ -12,8 +12,9 @@ interface UserState {
 }
 
 const initialState: UserState = {
-  isAuthorized: true,
+  isAuthorized: false,
   user: {
+    id: -1,
     classroom: null,
     course: 0,
     departmentId: 0,

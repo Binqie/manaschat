@@ -4,12 +4,12 @@ import Signin from 'pages/signin'
 import Signup from 'pages/signup'
 import Home from 'pages/home'
 import { IRoute } from 'shared/model/Types'
-import Admin from 'pages/admin'
 import Confirm from 'pages/confirm'
 import ResetPassword from 'pages/resetPassword'
 import PostCreation from 'pages/postCreation'
 import PostEdition from 'pages/postEdition'
 import ProfilePage from 'pages/profile'
+import AdminTest from 'pages/admin-test'
 
 export const PublicRoutes: IRoute[] = [
   {
@@ -44,11 +44,11 @@ export const PrivateRoutes: IRoute[] = [
     element: <PostEdition />,
   },
   {
-    path: PRIVATE_ROUTES.ADMIN,
-    element: <Admin />,
-  },
-  {
     path: PRIVATE_ROUTES.PROFILE,
     element: <ProfilePage />,
+  },
+  {
+    path: PRIVATE_ROUTES.ADMIN,
+    element: <AdminTest />,
   },
 ]

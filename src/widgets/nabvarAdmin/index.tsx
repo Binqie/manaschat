@@ -12,26 +12,15 @@ import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import AdbIcon from '@mui/icons-material/Adb'
-import { Await, Link } from 'react-router-dom'
-import { BASE_URL, PRIVATE_ROUTES } from 'shared/config/consts'
-import { $api } from 'shared/api'
-import { useAppDispatch } from 'shared/hooks'
-import { logout } from 'app/store/slices/UserSlice'
-import { FormControlLabel } from '@mui/material'
+import { MdManageAccounts } from 'react-icons/md'
+import { Link, Navigate, redirect } from 'react-router-dom'
+import { PRIVATE_ROUTES } from 'shared/config/consts'
 import ThemeSwitcher from 'ui/themeSwitch'
 
-const pages = [
-  // { name: 'Sign In', link: '/signin' },
-  // { name: 'Sign Up', link: '/signup' },
-  { name: 'Create Post', link: '/create-post' },
-]
+const pages = ['users', 'requests']
+const settings = ['Logout']
 
-const SendLogoutRequest = async () => {
-  return await $api.get(`${BASE_URL}/Users/LogOut`)
-}
-
-function Navbar() {
-  const dispatch = useAppDispatch()
+function NavbarAdmin() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
@@ -52,22 +41,15 @@ function Navbar() {
     setAnchorElUser(null)
   }
 
-  const handleLogOut = () => {
-    const response = SendLogoutRequest()
-    dispatch(logout())
-    console.log(response)
-  }
-
   return (
-    <AppBar position='sticky'>
+    <AppBar position='static'>
       <Container maxWidth='xl'>
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
             variant='h6'
             noWrap
             component='a'
-            href={PRIVATE_ROUTES.HOME}
+            onClick={() => redirect('./')}
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -78,7 +60,7 @@ function Navbar() {
               textDecoration: 'none',
             }}
           >
-            Manaschat
+            Admin
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -110,27 +92,30 @@ function Navbar() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map(({ name, link }) => (
-                <MenuItem
-                  key={name}
-                  onClick={handleCloseNavMenu}
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Link
+                  to='/admin'
+                  style={{ textDecoration: 'none', color: 'orangered' }}
                 >
-                  <Link
-                    to={link}
-                    style={{ textDecoration: 'none', color: 'black' }}
-                  >
-                    <Typography textAlign='center'>{name}</Typography>
-                  </Link>
-                </MenuItem>
-              ))}
+                  <Typography textAlign='center'>Users</Typography>
+                </Link>
+              </MenuItem>
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Link
+                  to='requests'
+                  style={{ textDecoration: 'none', color: 'orangered' }}
+                >
+                  <Typography textAlign='center'>Requests</Typography>
+                </Link>
+              </MenuItem>
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <MdManageAccounts size={30} />
           <Typography
             variant='h5'
             noWrap
             component='a'
-            href={PRIVATE_ROUTES.HOME}
+            onClick={() => redirect('./')}
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -142,23 +127,25 @@ function Navbar() {
               textDecoration: 'none',
             }}
           >
-            Manaschat
+            Admin
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map(({ name, link }) => (
-              <Button
-                key={name}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+            <MenuItem onClick={handleCloseNavMenu}>
+              <Link
+                to='/admin'
+                style={{ textDecoration: 'none', color: 'white' }}
               >
-                <Link
-                  to={link}
-                  style={{ textDecoration: 'none', color: 'white' }}
-                >
-                  <Typography textAlign='center'>{name}</Typography>
-                </Link>
-              </Button>
-            ))}
+                <Typography textAlign='center'>Users</Typography>
+              </Link>
+            </MenuItem>
+            <MenuItem onClick={handleCloseNavMenu}>
+              <Link
+                to='requests'
+                style={{ textDecoration: 'none', color: 'white' }}
+              >
+                <Typography textAlign='center'>Requests</Typography>
+              </Link>
+            </MenuItem>
           </Box>
           <Box>
             <ThemeSwitcher />
@@ -191,17 +178,14 @@ function Navbar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <MenuItem>
-                <Link
-                  to={PRIVATE_ROUTES.PROFILE}
-                  style={{ textDecoration: 'none', color: 'gray' }}
+              {settings.map((setting) => (
+                <MenuItem
+                  key={setting}
+                  onClick={handleCloseUserMenu}
                 >
-                  <Typography textAlign='center'>Profile</Typography>
-                </Link>
-              </MenuItem>
-              <MenuItem onClick={handleLogOut}>
-                <Typography textAlign='center'>Logout</Typography>
-              </MenuItem>
+                  <Typography textAlign='center'>{setting}</Typography>
+                </MenuItem>
+              ))}
             </Menu>
           </Box>
         </Toolbar>
@@ -209,4 +193,4 @@ function Navbar() {
     </AppBar>
   )
 }
-export default Navbar
+export default NavbarAdmin

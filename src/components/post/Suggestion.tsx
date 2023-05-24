@@ -213,6 +213,7 @@ export default function SuggestionCard({
           </RadioGroup>
           <Button
             variant='outlined'
+            color='secondary'
             onClick={handlePostResultRequest}
             sx={{ marginBottom: 3 }}
           >

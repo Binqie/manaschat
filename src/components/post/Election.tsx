@@ -192,6 +192,7 @@ export default function ElectionCard({
           </RadioGroup>
           <Button
             variant='outlined'
+            color='secondary'
             onClick={handlePostResultRequest}
             sx={{ marginBottom: 3 }}
           >
