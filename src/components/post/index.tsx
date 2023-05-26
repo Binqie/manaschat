@@ -1,49 +1,43 @@
-import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
-import CardMedia from '@mui/material/CardMedia'
-import CardContent from '@mui/material/CardContent'
-import Avatar from '@mui/material/Avatar'
-import IconButton from '@mui/material/IconButton'
-import Typography from '@mui/material/Typography'
-import { red } from '@mui/material/colors'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import CardMedia from "@mui/material/CardMedia";
+import CardContent from "@mui/material/CardContent";
+import Avatar from "@mui/material/Avatar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import { red } from "@mui/material/colors";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-import Radio from '@mui/material/Radio'
-import RadioGroup from '@mui/material/RadioGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import FormControl from '@mui/material/FormControl'
-import FormLabel from '@mui/material/FormLabel'
-import { Box, Button } from '@mui/material'
-import Menu from '@mui/material/Menu'
-import MenuItem from '@mui/material/MenuItem'
-import { BiCommentAdd } from 'react-icons/bi'
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import { Box, Button } from "@mui/material";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { BiCommentAdd } from "react-icons/bi";
 
-import { IPostProps, PostTypesEnum } from 'shared/model/Types'
-import { GetUserIdByCookies } from 'shared/lib/getUserIdByCookies'
-import { DeletePostRequest } from 'shared/lib/deletePostRequest'
-import { useAppDispatch } from 'shared/hooks'
-import { deletePost } from 'app/store/slices/PostSlice'
-import { useState } from 'react'
-import { Link, Navigate } from 'react-router-dom'
-import { BASE_URL, PRIVATE_ROUTES } from 'shared/config/consts'
-import { $api } from 'shared/api'
-import PostModal from 'widgets/postModal'
-import ElectionCard from './Election'
+import { IPostProps, PostTypesEnum } from "shared/model/Types";
+import { GetUserIdByCookies } from "shared/lib/getUserIdByCookies";
+import { DeletePostRequest } from "shared/lib/postsRequests";
+import { useAppDispatch } from "shared/hooks";
+import { deletePost } from "app/store/slices/PostSlice";
+import { useState } from "react";
+import { Link, Navigate } from "react-router-dom";
+import { BASE_URL, PRIVATE_ROUTES } from "shared/config/consts";
+import { $api } from "shared/api";
 
-interface IElectionPostResult {
-  electionPostDetailId: number
-}
+import {
+  IElectionPostResult,
+  ISuggestionPostResult,
+  SendElectionPostResult,
+  SendSuggestionPostResult,
+} from "shared/lib/postResultsRequests";
 
-const CreateElectionPostResult = async (data: IElectionPostResult) => {
-  return await $api.post(
-    `${BASE_URL}/PostResults/CreateElectionPostResult`,
-    data
-  )
-}
+export default function Post({ post }: IPostProps) {
+  const dispatch = useAppDispatch();
 
-export default function Post() {
-  const dispatch = useAppDispatch()
-  const [selectedValue, setSelectedValue] = useState<number>(
+  const [selectedElectionValue, setSelectedElectionValue] = useState<number>(
     post.electionPostDetailsList.filter(
       (item) =>
         item.id ===
@@ -51,78 +45,93 @@ export default function Post() {
           (item) => item.authorId === GetUserIdByCookies()
         )[0]?.electionPostDetailId
     )[0]?.id
-  )
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const open = Boolean(anchorEl)
-  const [isModalOpen, setModalOpen] = useState(false)
+  );
+
+  const [selectedSuggestionValue, setSelectedSuggestionValue] =
+    useState<boolean>(
+      post.suggestionPostResultsList.filter(
+        (item) =>
+          item.id ===
+          post.suggestionPostResultsList.filter(
+            (item) => item.authorId === GetUserIdByCookies()
+          )[0]?.id
+      )[0]?.isAgree
+    );
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const [isModalOpen, setModalOpen] = useState(false);
 
   const handleModalOpen = () => {
-    setModalOpen(true)
-  }
+    setModalOpen(true);
+  };
   const handleModalClose = () => {
-    setModalOpen(false)
-  }
+    setModalOpen(false);
+  };
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
+    setAnchorEl(event.currentTarget);
+  };
   const handleClose = () => {
-    setAnchorEl(null)
-  }
+    setAnchorEl(null);
+  };
   const handlePostDelete = async (postId: number) => {
-    dispatch(deletePost(postId))
-    const response = await DeletePostRequest(postId)
-    console.log(response)
-  }
+    dispatch(deletePost(postId));
+    const response = await DeletePostRequest(postId);
+    console.log(response);
+  };
   const handlePostResultRequest = async () => {
-    const data: IElectionPostResult = {
-      electionPostDetailId: selectedValue,
-    }
+    let data: IElectionPostResult | ISuggestionPostResult;
 
-    const response = await CreateElectionPostResult(data)
-    console.log(response)
-  }
+    if (post.type === 2) {
+      data = {
+        electionPostDetailId: selectedElectionValue,
+      };
+
+      const result = await SendElectionPostResult(data);
+      console.log(result);
+    } else if (post.type === 1) {
+      data = {
+        postId: post.id,
+        isAgree: selectedSuggestionValue,
+      };
+
+      const result = await SendSuggestionPostResult(data);
+      console.log(result);
+    }
+  };
 
   return (
-    <Card
-      sx={{ width: 350 }}
-      variant='outlined'
-    >
+    <Card sx={{ width: 350 }} variant="outlined">
       <CardHeader
         avatar={
-          <Avatar
-            sx={{ bgcolor: red[500] }}
-            aria-label='recipe'
-          >
+          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
             R
           </Avatar>
         }
         action={
           GetUserIdByCookies() === post.authorId ? (
             <>
-              <IconButton
-                aria-label='settings'
-                onClick={handleClick}
-              >
+              <IconButton aria-label="settings" onClick={handleClick}>
                 <MoreVertIcon />
               </IconButton>
               <Menu
-                id='basic-menu'
+                id="basic-menu"
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
                 MenuListProps={{
-                  'aria-labelledby': 'basic-button',
+                  "aria-labelledby": "basic-button",
                 }}
               >
                 <Link
                   to={`${PRIVATE_ROUTES.POST_EDITING}?id=${post.id}`}
-                  style={{ textDecoration: 'none' }}
+                  style={{ textDecoration: "none" }}
                 >
                   <MenuItem>Edit</MenuItem>
                 </Link>
                 <MenuItem
                   onClick={() => handlePostDelete(post.id)}
-                  style={{ color: 'red' }}
+                  style={{ color: "red" }}
                 >
                   Delete
                 </MenuItem>
@@ -136,76 +145,118 @@ export default function Post() {
         ).toLocaleDateString()}`}
       />
       <CardMedia
-        component='img'
-        height='194'
+        component="img"
+        height="194"
         image={`data:image/png;base64, ${post.image}`}
       />
       <CardContent>
-        <Typography
-          variant='h5'
-          color='text.primary'
-        >
+        <Typography variant="h5" color="text.primary">
           {post.title}
         </Typography>
-        <Typography
-          variant='body2'
-          color='text.primary'
-        >
+        <Typography variant="body2" color="text.primary">
           {post.body}
         </Typography>
-        <FormControl style={{ width: '100%' }}>
-          <RadioGroup
-            aria-labelledby='demo-radio-buttons-group-label'
-            defaultValue='female'
-            name='radio-buttons-group'
-            value={selectedValue}
-          >
-            {post.electionPostDetailsList.map((item) => (
+        <FormControl style={{ width: "100%" }}>
+          {post.type === 1 && (
+            <RadioGroup
+              aria-labelledby="demo-controlled-radio-buttons-group"
+              name="controlled-radio-buttons-group"
+              value={selectedSuggestionValue}
+              onChange={(e) => setSelectedSuggestionValue(!!e.target.value)}
+              style={{ display: "flex" }}
+            >
               <Box
-                key={item.id}
                 sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                 }}
               >
                 <FormControlLabel
-                  value={item.id}
+                  value={true}
                   control={<Radio />}
-                  label={item.variant}
-                  onClick={() => setSelectedValue(item.id)}
+                  label="Yes"
                 />
-                <Typography
-                  variant='body2'
-                  color='text.primary'
-                >
+                <Typography variant="body2" color="text.primary">
                   {
-                    post.electionPostResultsList.filter(
-                      (variant) => variant.electionPostDetailId === item.id
+                    post.suggestionPostResultsList.filter(
+                      (item) => item.isAgree
                     ).length
                   }
                 </Typography>
               </Box>
-            ))}
-          </RadioGroup>
-          <Button
-            variant='outlined'
-            color='secondary'
-            onClick={handlePostResultRequest}
-            sx={{ marginBottom: 3 }}
-          >
-            Vote
-          </Button>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <FormControlLabel
+                  value={false}
+                  control={<Radio />}
+                  label="No"
+                />
+                <Typography variant="body2" color="text.primary">
+                  {
+                    post.suggestionPostResultsList.filter(
+                      (item) => !item.isAgree
+                    ).length
+                  }
+                </Typography>
+              </Box>
+            </RadioGroup>
+          )}
+          {post.type === 2 && (
+            <RadioGroup
+              aria-labelledby="demo-radio-buttons-group-label"
+              defaultValue="female"
+              name="radio-buttons-group"
+              value={selectedElectionValue}
+            >
+              {post.electionPostDetailsList.map((item) => (
+                <Box
+                  key={item.id}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <FormControlLabel
+                    value={item.id}
+                    control={<Radio />}
+                    label={item.variant}
+                    onClick={() => setSelectedElectionValue(item.id)}
+                  />
+                  <Typography variant="body2" color="text.primary">
+                    {
+                      post.electionPostResultsList.filter(
+                        (variant) => variant.electionPostDetailId === item.id
+                      ).length
+                    }
+                  </Typography>
+                </Box>
+              ))}
+            </RadioGroup>
+          )}
+          {post.type !== 0 && (
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={handlePostResultRequest}
+              sx={{ marginBottom: 3 }}
+            >
+              Vote
+            </Button>
+          )}
         </FormControl>
         <Box>
-          <Button
-            onClick={handleModalOpen}
-            sx={{ display: isButtonHidden ? 'none' : 'block' }}
-          >
+          <Link to={`${post.id}`}>
             <BiCommentAdd size={28} />
-          </Button>
+          </Link>
         </Box>
       </CardContent>
     </Card>
-  )
+  );
 }
