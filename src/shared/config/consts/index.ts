@@ -9,6 +9,7 @@ export const PUBLIC_ROUTES = {
 
 export const PRIVATE_ROUTES = {
   HOME: '/',
+  POST: '/post:id',
   POST_CREATION: '/create-post',
   POST_EDITING: '/edit-post',
   ADMIN: '/admin',

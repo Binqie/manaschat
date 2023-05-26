@@ -9,7 +9,7 @@ import ResetPassword from 'pages/resetPassword'
 import PostCreation from 'pages/postCreation'
 import PostEdition from 'pages/postEdition'
 import ProfilePage from 'pages/profile'
-import AdminTest from 'pages/admin-test'
+import AdminTest from 'pages/admin'
 
 export const PublicRoutes: IRoute[] = [
   {

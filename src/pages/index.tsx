@@ -6,9 +6,14 @@ import Signin from './signin'
 import { ThemeProvider } from '@mui/material'
 import { lightTheme, darkTheme } from 'shared/themes'
 import { PRIVATE_ROUTES } from 'shared/config/consts'
-import Users from './admin-test/pages/Users'
-import Requests from './admin-test/pages/Requests'
-import AdminTest from './admin-test'
+import Users from './admin/pages/Users'
+import Requests from './admin/pages/Requests'
+import AdminTest from './admin'
+import Home from './home'
+import PostModal from 'widgets/postModal'
+import Post from './post'
+import Posts from './posts'
+import PostCreation from './postCreation'
 
 const Router = () => {
   const isAuthorized = useAppSelector((store) => store.user.isAuthorized)
@@ -41,19 +46,35 @@ const Router = () => {
             </Route>
           ))}
         {(isAuthorized || user.type === 2) && (
-          <Route
-            path={PRIVATE_ROUTES.ADMIN}
-            element={<AdminTest />}
-          >
+          <>
             <Route
-              index
-              element={<Users />}
-            />
-            <Route
-              path='requests'
-              element={<Requests />}
-            />
-          </Route>
+              path={PRIVATE_ROUTES.ADMIN}
+              element={<AdminTest />}
+            >
+              <Route
+                index
+                element={<Users />}
+              />
+              <Route
+                path='requests'
+                element={<Requests />}
+              />
+            </Route>
+            <Route path='/posts'>
+              <Route
+                index
+                element={<Posts />}
+              />
+              <Route
+                path=':postId'
+                element={<Post />}
+              />
+              <Route
+                path='new'
+                element={<PostCreation />}
+              />
+            </Route>
+          </>
         )}
         <Route
           path='*'
