@@ -64,9 +64,9 @@ export interface IStoreUser {
 }
 
 export interface IComment {
-  author?: null;
+  author: IUser;
   authorId: number;
-  createdAt?: string;
+  createdAt: string;
   id: number;
   post?: null;
   postId: number;
@@ -90,34 +90,41 @@ export interface IPost {
   body: string;
   image: string | undefined;
   type: number;
-  electionPostDetailsList: [
-    {
-      id: number;
-      postId: number;
-      variant: string;
-    }
-  ];
-  electionPostResultsList: [
-    {
-      id: number;
-      authorId: number;
-      electionPostDetailId: number;
-    }
-  ];
-  suggestionPostResultsList: [
-    {
-      id: number;
-      authorId: number;
-      postId: number;
-      isAgree: boolean;
-    }
-  ];
+  electionPostDetailsList:
+    | [
+        {
+          id: number;
+          postId: number;
+          variant: string;
+        }
+      ]
+    | [];
+  electionPostResultsList:
+    | [
+        {
+          id: number;
+          authorId: number;
+          electionPostDetailId: number;
+        }
+      ]
+    | [];
+  suggestionPostResultsList:
+    | [
+        {
+          id: number;
+          authorId: number;
+          postId: number;
+          isAgree: boolean;
+        }
+      ]
+    | [];
   authorId: number;
   authorFullname: string;
 }
 
 export interface IPostProps {
   post: IPost;
+  fetchPosts: () => void;
 }
 
 export interface IPostCreate {
@@ -127,9 +134,20 @@ export interface IPostCreate {
   type: number;
 }
 
+export interface IPostEdit {
+  id: number;
+  body: string;
+  title: string;
+  image: any;
+}
+
 export interface IElectionDetails {
   postId: number;
   variants: string[];
+}
+export interface IElectionDetailsEdit {
+  id: number;
+  variant: string;
 }
 
 export enum PostTypesEnum {

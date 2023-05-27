@@ -1,25 +1,25 @@
 export const PostFormInputs = [
   {
-    id: 'selectedTitle',
-    name: 'title',
-    type: 'text',
-    label: 'title',
+    id: "selectedTitle",
+    name: "Аталышы",
+    type: "text",
+    label: "Аталышы",
   },
   {
-    id: 'selectedBody',
-    name: 'body',
-    type: 'text',
-    label: 'body',
+    id: "selectedBody",
+    name: "Текст",
+    type: "text",
+    label: "Текст",
   },
-]
+];
 
 export const SignupInputs = [
   {
-    id: 'email',
-    name: 'email',
-    type: 'email',
-    label: 'input your email',
-    hint: 'Your email must be in format 0000.00000@manas.edu.kg',
+    id: "email",
+    name: "Email",
+    type: "email",
+    label: "Почтаңызды жазыңыз",
+    hint: "Сиздин почта 0000.00000@manas.edu.kg форматында болуусу керек",
     validation: {
       required: true,
       maxLength: 24,
@@ -28,11 +28,11 @@ export const SignupInputs = [
     },
   },
   {
-    id: 'pass',
-    name: 'password',
-    type: 'password',
-    label: 'enter your password',
-    hint: 'Length of your password must be 4-15 characters.',
+    id: "pass",
+    name: "Сыр сөз",
+    type: "password",
+    label: "Сыр сөздү тандаңыз",
+    hint: "Сыр сөздүн узундугу 4-15 символ.",
     validation: {
       required: true,
       maxLength: 15,
@@ -40,20 +40,20 @@ export const SignupInputs = [
     },
   },
   {
-    id: 'fullname',
-    name: 'fullname',
-    type: 'text',
-    label: 'your full name',
+    id: "fullname",
+    name: "Аты жөнүңүз",
+    type: "text",
+    label: "Сиздин аты жөнүңүз",
     validation: {
       required: true,
       minLength: 2,
     },
   },
   {
-    id: 'course',
-    name: 'course',
-    type: 'number',
-    label: 'your course',
+    id: "course",
+    name: "Курс",
+    type: "number",
+    label: "Сиздин курс",
     validation: {
       required: true,
       max: 5,
@@ -61,24 +61,24 @@ export const SignupInputs = [
     },
   },
   {
-    id: 'classroom',
-    name: 'classroom',
-    type: 'number',
-    label: 'your class room',
-    display: 'none',
+    id: "classroom",
+    name: "Группа",
+    type: "number",
+    label: "Сиздин группа",
+    display: "none",
     validation: {
       required: false,
     },
   },
   {
-    id: 'yearOfAdmission',
-    name: 'yearOfAdmission',
-    type: 'month',
-    label: 'your year Of Admission',
+    id: "yearOfAdmission",
+    name: "Тапшырган жыл",
+    type: "month",
+    label: "Тапшырган жылыңыз",
     validation: {
       required: true,
       max: new Date().getFullYear(),
       min: 1995,
     },
   },
-]
+];

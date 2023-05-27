@@ -19,13 +19,13 @@ import { $api } from "shared/api";
 import { fetchDepartments, fetchFaculties } from "app/store/slices/UserSlice";
 import { IDepartment, IFaculty } from "shared/model/Types";
 import { SignupInputs as inputs } from "shared/model/Inputs";
+import { ISelectCollection, IUser } from "shared/model/Types";
 
 const SignUp = async (data: UserType) => {
   const response = await $api.post("/Users/SignUp", data);
   return response;
 };
 
-import { ISelectCollection, IUser } from "shared/model/Types";
 type UserType = Omit<IUser, "id">;
 
 const Signup = () => {
@@ -66,7 +66,6 @@ const Signup = () => {
 
     const response = await SignUp(userInfo);
     setResponseStatus(response.status);
-    console.log("response", response);
   };
 
   useEffect(() => {
@@ -200,15 +199,15 @@ const Signup = () => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+              Катталыңыз
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link to="/password/forgot">Forgot password?</Link>
+                <Link to="/password/forgot">Сыр сөздү унуттуңузбу?</Link>
               </Grid>
               <Grid item>
                 <Link to={PUBLIC_ROUTES.SIGNIN}>
-                  {"Already have an account? Sign In"}
+                  {"Аккаунтуңуз барбы? Кирүү."}
                 </Link>
               </Grid>
             </Grid>

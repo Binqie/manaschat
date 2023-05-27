@@ -11,7 +11,8 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { GetUsers } from "shared/lib/adminRequests";
-import { SendActivateUserRequest, DeleteUser } from "shared/lib/usersRequests";
+import { SendActivateUserRequest } from "shared/lib/usersRequests";
+import { DeleteUser } from "shared/lib/adminRequests";
 import { IUser } from "shared/model/Types";
 
 const Users = () => {
@@ -19,7 +20,6 @@ const Users = () => {
   const getUsers = async () => {
     const response = await GetUsers();
     setUsers(response.data.filter((item: any) => !item.isActive));
-    console.log("users", response.data);
   };
 
   useEffect(() => {
@@ -28,13 +28,11 @@ const Users = () => {
 
   const handleDeleteUser = async (id: number) => {
     const response = await DeleteUser(id);
-    console.log("delete user", response);
     getUsers();
   };
 
   const handleActivateUser = async (email: string) => {
     const response = await SendActivateUserRequest(email);
-    console.log("activate user", response);
     getUsers();
   };
 
@@ -46,18 +44,18 @@ const Users = () => {
       }}
     >
       <Typography variant="h4" align="center" sx={{ marginBottom: "20px" }}>
-        Users
+        Колдонуучуларды тастыктоо
       </Typography>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
           <TableHead>
             <TableRow>
-              <TableCell>User Id</TableCell>
+              <TableCell>Id</TableCell>
               <TableCell>Email</TableCell>
-              <TableCell align="right">Course</TableCell>
-              <TableCell align="right">Classroom</TableCell>
-              <TableCell align="right">Faculty Id</TableCell>
-              <TableCell align="right">Department Id</TableCell>
+              <TableCell align="right">Курс</TableCell>
+              <TableCell align="right">Группа</TableCell>
+              <TableCell align="right">Факультет Id</TableCell>
+              <TableCell align="right">Бөлүм Id</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -80,7 +78,7 @@ const Users = () => {
                     color="success"
                     onClick={() => handleActivateUser(user.email)}
                   >
-                    activate
+                    Тастыктоо
                   </Button>
                 </TableCell>
                 <TableCell align="right">
@@ -89,7 +87,7 @@ const Users = () => {
                     color="error"
                     onClick={() => handleDeleteUser(user.id)}
                   >
-                    delete
+                    Өчүрүү
                   </Button>
                 </TableCell>
               </TableRow>

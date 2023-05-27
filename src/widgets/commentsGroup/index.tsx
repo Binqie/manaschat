@@ -1,57 +1,34 @@
-import { List } from '@mui/material'
-import { IComment } from 'shared/model/Types'
-import Comment from 'components/comment'
-import { $api } from 'shared/api'
-import { useEffect, useState } from 'react'
+import { List } from "@mui/material";
+import { IComment } from "shared/model/Types";
+import Comment from "components/comment";
+import { $api } from "shared/api";
+import { useEffect, useState } from "react";
+import { DeleteCommentById } from "shared/lib/commentsRequests";
+import { useAppDispatch } from "shared/hooks";
+import { deleteComment } from "app/store/slices/CommentSlice";
 
-const SendDeleteCommentRequest = async (commentId: number) => {
-  return await $api.delete(`/Comments/DeleteById?id=${commentId}`)
-}
-
-const GetCommentsByPostId = async (postId: number) => {
-  return await $api.get(`/Comments/GetByPostId?postId=${postId}`)
-}
-
-const CommentsGroup = (props: {
-  postId: number
-  handleModalClose: () => void
-  handleDeleteComment: () => void
-}) => {
-  const [commentsList, setCommentsList] = useState([])
+const CommentsGroup = ({ comments }: { comments: IComment[] }) => {
+  const dispatch = useAppDispatch();
 
   const handleDeleteComment = async (id: number) => {
-    const response = await SendDeleteCommentRequest(id)
-    console.log(response)
-    props.handleModalClose()
-    props.handleDeleteComment()
-  }
-
-  useEffect(() => {
-    const fetchComments = async () => {
-      const response = await GetCommentsByPostId(props.postId)
-      console.log('data', response.data)
-      setCommentsList(response.data)
-      console.log('comments', commentsList)
-    }
-    fetchComments()
-  }, [])
+    const response = await DeleteCommentById(id);
+    dispatch(deleteComment(id));
+  };
 
   return (
-    <List
-      sx={{
-        width: '100%',
-      }}
-    >
-      {commentsList.map((comment: IComment, index) => (
+    <List sx={{ width: "100%" }}>
+      {comments.map((comment: IComment, index) => (
         <Comment
           key={index}
           text={comment.text}
-          author={comment.author}
+          author={comment.author.fullname}
+          authorId={comment.authorId}
+          date={comment.createdAt}
           deleteComment={() => handleDeleteComment(comment.id)}
         />
       ))}
     </List>
-  )
-}
+  );
+};
 
-export default CommentsGroup
+export default CommentsGroup;

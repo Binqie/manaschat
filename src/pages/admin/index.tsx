@@ -3,7 +3,7 @@ import React from 'react'
 import { Outlet } from 'react-router-dom'
 import NavbarAdmin from 'widgets/nabvarAdmin'
 
-const AdminTest = () => {
+const Admin = () => {
   return (
     <div>
       <NavbarAdmin />
@@ -12,4 +12,4 @@ const AdminTest = () => {
   )
 }
 
-export default AdminTest
+export default Admin

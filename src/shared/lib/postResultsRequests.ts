@@ -3,14 +3,18 @@ import { $api } from "shared/api";
 export interface IElectionPostResult {
   electionPostDetailId: number;
 }
+
 export interface ISuggestionPostResult {
   postId: number;
   isAgree: boolean;
 }
 
-export const SendElectionPostResult = async (
-  data: IElectionPostResult
-) => {
+export interface IEditSuggestionPostResult {
+  id: number;
+  isAgree: boolean;
+}
+
+export const SendElectionPostResult = async (data: IElectionPostResult) => {
   return await $api.post("/PostResults/CreateElectionPostResult", data);
 };
 
@@ -19,9 +23,9 @@ export const SendSuggestionPostResult = async (data: ISuggestionPostResult) => {
 };
 
 export const SendEditSuggestionPostResult = async (
-  data: ISuggestionPostResult
+  data: IEditSuggestionPostResult
 ) => {
-  return await $api.post("/PostResults/EditSuggestionPostResult", data);
+  return await $api.put("/PostResults/EditSuggestionPostResult", data);
 };
 
 export const DeleteSuggestionPostResult = async (id: number) => {

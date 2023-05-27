@@ -8,101 +8,88 @@ import {
   TableBody,
   Button,
   Typography,
-} from '@mui/material'
-import { useEffect, useState } from 'react'
+} from "@mui/material";
+import { useEffect, useState } from "react";
 import {
   GetRequests,
   SendExecuteChangeGroupRequest,
   SendDeleteChangeGroupRequest,
-} from 'shared/lib/adminRequests'
-import { IRequest } from 'shared/model/Types'
+} from "shared/lib/adminRequests";
+import { IRequest } from "shared/model/Types";
 
 const Requests = () => {
-  const [requests, setRequests] = useState<IRequest[]>([])
+  const [requests, setRequests] = useState<IRequest[]>([]);
 
   const getRequests = async () => {
-    const response = await GetRequests()
-    setRequests(response.data)
-    console.log('requests', response.data)
-  }
+    const response = await GetRequests();
+    setRequests(response.data);
+    console.log("requests", response.data);
+  };
 
   const handleAcceptRequest = async (id: number) => {
-    const response = await SendExecuteChangeGroupRequest(id)
-    console.log('accept request', response)
-    getRequests()
-  }
+    const response = await SendExecuteChangeGroupRequest(id);
+    console.log("accept request", response);
+    getRequests();
+  };
 
   const handleDeleteRequest = async (id: number) => {
-    const response = await SendDeleteChangeGroupRequest(id)
-    console.log('reject request', response)
-    getRequests()
-  }
+    const response = await SendDeleteChangeGroupRequest(id);
+    console.log("reject request", response);
+    getRequests();
+  };
 
   useEffect(() => {
-    getRequests()
-  }, [])
+    getRequests();
+  }, []);
 
   return (
     <div
       style={{
-        padding: '5px 30px 20px',
-        margin: '10px 40px 20px',
+        padding: "5px 30px 20px",
+        margin: "10px 40px 20px",
       }}
     >
-      <Typography
-        variant='h4'
-        align='center'
-        sx={{ marginBottom: '20px' }}
-      >
-        Requests
+      <Typography variant="h4" align="center" sx={{ marginBottom: "20px" }}>
+        Колдонуучулардын өтүнүчтөрү
       </Typography>
       <TableContainer component={Paper}>
-        <Table
-          sx={{ minWidth: 650 }}
-          size='small'
-          aria-label='a dense table'
-        >
+        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
           <TableHead>
             <TableRow>
-              <TableCell>Request Id</TableCell>
+              <TableCell>өтүнүч Id</TableCell>
               <TableCell>Email</TableCell>
-              <TableCell align='right'>New course</TableCell>
-              <TableCell align='right'>New classroom</TableCell>
-              {/* <TableCell align='right'>Carbs&nbsp;(g)</TableCell>
-              <TableCell align='right'>Protein&nbsp;(g)</TableCell> */}
+              <TableCell align="right">Жаңы курс</TableCell>
+              <TableCell align="right">Жаңы бөлүм</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {requests.map((req, index) => (
               <TableRow
                 key={index}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell align='center'>{req.id}</TableCell>
-                <TableCell
-                  component='th'
-                  scope='row'
-                >
+                <TableCell align="center">{req.id}</TableCell>
+                <TableCell component="th" scope="row">
                   {req.email}
                 </TableCell>
-                <TableCell align='center'>{req.course}</TableCell>
-                <TableCell align='center'>{req.classroom}</TableCell>
-                <TableCell align='right'>
+                <TableCell align="center">{req.course}</TableCell>
+                <TableCell align="center">{req.classroom}</TableCell>
+                <TableCell align="right">
                   <Button
-                    variant='outlined'
-                    color='success'
+                    variant="outlined"
+                    color="success"
                     onClick={() => handleAcceptRequest(req.id)}
                   >
-                    accept
+                    Кабыл алуу
                   </Button>
                 </TableCell>
-                <TableCell align='right'>
+                <TableCell align="right">
                   <Button
-                    variant='outlined'
-                    color='error'
+                    variant="outlined"
+                    color="error"
                     onClick={() => handleDeleteRequest(req.id)}
                   >
-                    reject
+                    Четке кагуу
                   </Button>
                 </TableCell>
               </TableRow>
@@ -111,7 +98,7 @@ const Requests = () => {
         </Table>
       </TableContainer>
     </div>
-  )
-}
+  );
+};
 
-export default Requests
+export default Requests;

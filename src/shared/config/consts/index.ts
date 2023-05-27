@@ -1,17 +1,18 @@
-export const BASE_URL = 'https://localhost:7289'
+export const BASE_URL = "https://localhost:7289";
 
 export const PUBLIC_ROUTES = {
-  SIGNIN: '/signin',
-  SIGNUP: '/signup',
-  CONFIRM: '/confirm',
-  RESET_PASSWORD: '/password/forgot',
-}
+  SIGNIN: "/signin",
+  SIGNUP: "/signup",
+  CONFIRM: "/confirm",
+  RESET_PASSWORD: "/password/forgot",
+};
 
 export const PRIVATE_ROUTES = {
-  HOME: '/',
-  POST: '/post:id',
-  POST_CREATION: '/create-post',
-  POST_EDITING: '/edit-post',
-  ADMIN: '/admin',
-  PROFILE: '/profile',
-}
+  HOME: "/",
+  POSTS: "/posts",
+  POST: ":postId",
+  POST_CREATION: "new",
+  POST_EDITING: "edit",
+  ADMIN: "/admin",
+  PROFILE: "/profile",
+};

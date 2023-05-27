@@ -15,3 +15,7 @@ export const GetRequests = async () => {
 export const GetUsers = async () => {
   return await $api.get("/Users/GetAll");
 };
+
+export const DeleteUser = async (id: number) => {
+  return await $api.delete(`/Users/Delete?${id}`);
+};

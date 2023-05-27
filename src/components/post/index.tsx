@@ -28,16 +28,21 @@ import { BASE_URL, PRIVATE_ROUTES } from "shared/config/consts";
 import { $api } from "shared/api";
 
 import {
+  DeleteElectionPostResult,
+  DeleteSuggestionPostResult,
   IElectionPostResult,
   ISuggestionPostResult,
+  SendEditSuggestionPostResult,
   SendElectionPostResult,
   SendSuggestionPostResult,
 } from "shared/lib/postResultsRequests";
 
-export default function Post({ post }: IPostProps) {
+export default function Post({ post, fetchPosts }: IPostProps) {
   const dispatch = useAppDispatch();
 
-  const [selectedElectionValue, setSelectedElectionValue] = useState<number>(
+  const [selectedElectionValue, setSelectedElectionValue] = useState<
+    number | null
+  >(
     post.electionPostDetailsList.filter(
       (item) =>
         item.id ===
@@ -47,27 +52,20 @@ export default function Post({ post }: IPostProps) {
     )[0]?.id
   );
 
-  const [selectedSuggestionValue, setSelectedSuggestionValue] =
-    useState<boolean>(
-      post.suggestionPostResultsList.filter(
-        (item) =>
-          item.id ===
-          post.suggestionPostResultsList.filter(
-            (item) => item.authorId === GetUserIdByCookies()
-          )[0]?.id
-      )[0]?.isAgree
-    );
-
+  const [selectedSuggestionValue, setSelectedSuggestionValue] = useState<
+    boolean | null
+  >(
+    post.suggestionPostResultsList.filter(
+      (item) =>
+        item.id ===
+        post.suggestionPostResultsList.filter(
+          (item) => item.authorId === GetUserIdByCookies()
+        )[0]?.id
+    )[0]?.isAgree
+  );
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const [isModalOpen, setModalOpen] = useState(false);
 
-  const handleModalOpen = () => {
-    setModalOpen(true);
-  };
-  const handleModalClose = () => {
-    setModalOpen(false);
-  };
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -77,27 +75,60 @@ export default function Post({ post }: IPostProps) {
   const handlePostDelete = async (postId: number) => {
     dispatch(deletePost(postId));
     const response = await DeletePostRequest(postId);
-    console.log(response);
+    fetchPosts();
   };
+
+  const handleClearChoise = async () => {
+    if (post.type === 1) {
+      const id =
+        post.suggestionPostResultsList.find(
+          (item) => item.authorId === GetUserIdByCookies()
+        )?.id || -1;
+      const result = await DeleteSuggestionPostResult(id);
+      setSelectedSuggestionValue(null);
+    } else if (post.type === 2) {
+      const id =
+        post.electionPostResultsList.find(
+          (item) => item.authorId === GetUserIdByCookies()
+        )?.id || -1;
+      const result = await DeleteElectionPostResult(id);
+      setSelectedElectionValue(null);
+    }
+    fetchPosts();
+  };
+
+  const handleChangeChoise = async () => {
+    const data = {
+      id:
+        post.suggestionPostResultsList.find(
+          (item) => item.authorId === GetUserIdByCookies()
+        )?.id || -1,
+      isAgree: !selectedSuggestionValue,
+    };
+
+    const result = await SendEditSuggestionPostResult(data);
+    fetchPosts();
+    setSelectedSuggestionValue(data.isAgree);
+  };
+
   const handlePostResultRequest = async () => {
     let data: IElectionPostResult | ISuggestionPostResult;
 
     if (post.type === 2) {
       data = {
-        electionPostDetailId: selectedElectionValue,
+        electionPostDetailId: selectedElectionValue || -1,
       };
 
       const result = await SendElectionPostResult(data);
-      console.log(result);
     } else if (post.type === 1) {
       data = {
         postId: post.id,
-        isAgree: selectedSuggestionValue,
+        isAgree: selectedSuggestionValue || false,
       };
 
       const result = await SendSuggestionPostResult(data);
-      console.log(result);
     }
+    fetchPosts();
   };
 
   return (
@@ -105,7 +136,7 @@ export default function Post({ post }: IPostProps) {
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            R
+            {post.authorFullname[0]}
           </Avatar>
         }
         action={
@@ -127,14 +158,30 @@ export default function Post({ post }: IPostProps) {
                   to={`${PRIVATE_ROUTES.POST_EDITING}?id=${post.id}`}
                   style={{ textDecoration: "none" }}
                 >
-                  <MenuItem>Edit</MenuItem>
+                  <MenuItem>Өзгөртүү</MenuItem>
                 </Link>
                 <MenuItem
                   onClick={() => handlePostDelete(post.id)}
                   style={{ color: "red" }}
                 >
-                  Delete
+                  Өчүрүү
                 </MenuItem>
+                {post.type === 1 && (
+                  <MenuItem
+                    onClick={handleChangeChoise}
+                    style={{ color: "red" }}
+                  >
+                    Менин тандоомду өзгөрт
+                  </MenuItem>
+                )}
+                {(post.type === 1 || post.type === 2) && (
+                  <MenuItem
+                    onClick={handleClearChoise}
+                    style={{ color: "red" }}
+                  >
+                    Менин тандоомду өчүр
+                  </MenuItem>
+                )}
               </Menu>
             </>
           ) : null
@@ -175,7 +222,7 @@ export default function Post({ post }: IPostProps) {
                 <FormControlLabel
                   value={true}
                   control={<Radio />}
-                  label="Yes"
+                  label="Кошулам"
                 />
                 <Typography variant="body2" color="text.primary">
                   {
@@ -195,7 +242,7 @@ export default function Post({ post }: IPostProps) {
                 <FormControlLabel
                   value={false}
                   control={<Radio />}
-                  label="No"
+                  label="Кошулбайм"
                 />
                 <Typography variant="body2" color="text.primary">
                   {
@@ -247,7 +294,7 @@ export default function Post({ post }: IPostProps) {
               onClick={handlePostResultRequest}
               sx={{ marginBottom: 3 }}
             >
-              Vote
+              Добуш берүү
             </Button>
           )}
         </FormControl>

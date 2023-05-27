@@ -37,6 +37,6 @@ export const GetUser = async (id: number) => {
   return await $api.get(`/Users/Get?id=${id}`);
 };
 
-export const DeleteUser = async (id: number) => {
-  return await $api.delete(`/Users/Delete?id=${id}`);
+export const DeleteMe = async () => {
+  return await $api.delete("/Users/DeleteMe");
 };

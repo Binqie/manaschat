@@ -29,26 +29,3 @@ export const PublicRoutes: IRoute[] = [
     element: <ResetPassword />,
   },
 ]
-
-export const PrivateRoutes: IRoute[] = [
-  {
-    path: PRIVATE_ROUTES.HOME,
-    element: <Home />,
-  },
-  {
-    path: PRIVATE_ROUTES.POST_CREATION,
-    element: <PostCreation />,
-  },
-  {
-    path: PRIVATE_ROUTES.POST_EDITING,
-    element: <PostEdition />,
-  },
-  {
-    path: PRIVATE_ROUTES.PROFILE,
-    element: <ProfilePage />,
-  },
-  {
-    path: PRIVATE_ROUTES.ADMIN,
-    element: <AdminTest />,
-  },
-]

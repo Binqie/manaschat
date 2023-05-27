@@ -57,7 +57,6 @@ const ThemeSwitcher = () => {
 
   const handleThemeChange = (): void => {
     dispatch(setAppTheme(appTheme === 'dark' ? 'light' : 'dark'))
-    console.log(appTheme)
   }
 
   return (

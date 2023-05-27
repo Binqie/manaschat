@@ -8,21 +8,22 @@ import MainContainer from "widgets/mainContainer";
 const Posts = () => {
   const [posts, setPosts] = useState<IPost[]>();
 
-  const fetchData = async () => {
+  const fetchPosts = async () => {
     const response = await GetPosts();
     setPosts(response.data);
-    console.log(response.data);
   };
 
   useEffect(() => {
-    fetchData();
+    fetchPosts();
   }, []);
 
   return (
     <MainContainer>
-      {posts?.map((post) => (
-        <Post key={post.id} post={post} />
-      ))}
+      {posts
+        ?.map((post) => (
+          <Post fetchPosts={fetchPosts} key={post.id} post={post} />
+        ))
+        .reverse()}
     </MainContainer>
   );
 };

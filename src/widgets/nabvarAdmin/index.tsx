@@ -1,149 +1,153 @@
-import * as React from 'react'
-import AppBar from '@mui/material/AppBar'
-import Box from '@mui/material/Box'
-import Toolbar from '@mui/material/Toolbar'
-import IconButton from '@mui/material/IconButton'
-import Typography from '@mui/material/Typography'
-import Menu from '@mui/material/Menu'
-import MenuIcon from '@mui/icons-material/Menu'
-import Container from '@mui/material/Container'
-import Avatar from '@mui/material/Avatar'
-import Button from '@mui/material/Button'
-import Tooltip from '@mui/material/Tooltip'
-import MenuItem from '@mui/material/MenuItem'
-import AdbIcon from '@mui/icons-material/Adb'
-import { MdManageAccounts } from 'react-icons/md'
-import { Link, Navigate, redirect } from 'react-router-dom'
-import { PRIVATE_ROUTES } from 'shared/config/consts'
-import ThemeSwitcher from 'ui/themeSwitch'
+import * as React from "react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import Container from "@mui/material/Container";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Tooltip from "@mui/material/Tooltip";
+import MenuItem from "@mui/material/MenuItem";
+import AdbIcon from "@mui/icons-material/Adb";
+import { MdManageAccounts } from "react-icons/md";
+import { Link, Navigate, redirect } from "react-router-dom";
+import { PRIVATE_ROUTES } from "shared/config/consts";
+import ThemeSwitcher from "ui/themeSwitch";
+import { Logout } from "shared/lib/usersRequests";
 
-const pages = ['users', 'requests']
-const settings = ['Logout']
+const pages = ["users", "requests"];
+const settings = ["Чыгуу"];
 
 function NavbarAdmin() {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
+    null
+  );
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
-  )
+  );
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget)
-  }
+    setAnchorElNav(event.currentTarget);
+  };
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget)
-  }
+    setAnchorElUser(event.currentTarget);
+  };
 
   const handleCloseNavMenu = () => {
-    setAnchorElNav(null)
-  }
+    setAnchorElNav(null);
+  };
 
   const handleCloseUserMenu = () => {
-    setAnchorElUser(null)
-  }
+    setAnchorElUser(null);
+    Logout();
+  };
 
   return (
-    <AppBar position='static'>
-      <Container maxWidth='xl'>
+    <AppBar position="static">
+      <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
-            variant='h6'
+            variant="h6"
             noWrap
-            component='a'
-            onClick={() => redirect('./')}
+            component="a"
+            onClick={() => redirect("./")}
             sx={{
               mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
+              display: { xs: "none", md: "flex" },
+              fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              letterSpacing: ".3rem",
+              color: "inherit",
+              textDecoration: "none",
             }}
           >
-            Admin
+            Админ
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
-              size='large'
-              aria-label='account of current user'
-              aria-controls='menu-appbar'
-              aria-haspopup='true'
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color='inherit'
+              color="inherit"
             >
               <MenuIcon />
             </IconButton>
             <Menu
-              id='menu-appbar'
+              id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
+                vertical: "bottom",
+                horizontal: "left",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
+                vertical: "top",
+                horizontal: "left",
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: 'block', md: 'none' },
+                display: { xs: "block", md: "none" },
               }}
             >
               <MenuItem onClick={handleCloseNavMenu}>
                 <Link
-                  to='/admin'
-                  style={{ textDecoration: 'none', color: 'orangered' }}
+                  to="/admin"
+                  style={{ textDecoration: "none", color: "orangered" }}
                 >
-                  <Typography textAlign='center'>Users</Typography>
+                  <Typography textAlign="center">Колдонуучулар</Typography>
                 </Link>
               </MenuItem>
               <MenuItem onClick={handleCloseNavMenu}>
                 <Link
-                  to='requests'
-                  style={{ textDecoration: 'none', color: 'orangered' }}
+                  to="requests"
+                  style={{ textDecoration: "none", color: "orangered" }}
                 >
-                  <Typography textAlign='center'>Requests</Typography>
+                  <Typography textAlign="center">Өтүнүчтөр</Typography>
                 </Link>
               </MenuItem>
             </Menu>
           </Box>
           <MdManageAccounts size={30} />
           <Typography
-            variant='h5'
+            variant="h5"
             noWrap
-            component='a'
-            onClick={() => redirect('./')}
+            component="a"
+            onClick={() => redirect("./")}
             sx={{
               mr: 2,
-              display: { xs: 'flex', md: 'none' },
+              display: { xs: "flex", md: "none" },
               flexGrow: 1,
-              fontFamily: 'monospace',
+              fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              letterSpacing: ".3rem",
+              color: "inherit",
+              textDecoration: "none",
             }}
           >
-            Admin
+            Админ
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <MenuItem onClick={handleCloseNavMenu}>
               <Link
-                to='/admin'
-                style={{ textDecoration: 'none', color: 'white' }}
+                to="/admin"
+                style={{ textDecoration: "none", color: "white" }}
               >
-                <Typography textAlign='center'>Users</Typography>
+                <Typography textAlign="center">Колдонуучулар</Typography>
               </Link>
             </MenuItem>
             <MenuItem onClick={handleCloseNavMenu}>
               <Link
-                to='requests'
-                style={{ textDecoration: 'none', color: 'white' }}
+                to="requests"
+                style={{ textDecoration: "none", color: "white" }}
               >
-                <Typography textAlign='center'>Requests</Typography>
+                <Typography textAlign="center">Өтүнүчтөр</Typography>
               </Link>
             </MenuItem>
           </Box>
@@ -151,39 +155,30 @@ function NavbarAdmin() {
             <ThemeSwitcher />
           </Box>
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title='Open settings'>
-              <IconButton
-                onClick={handleOpenUserMenu}
-                sx={{ p: 0 }}
-              >
-                <Avatar
-                  alt='Remy Sharp'
-                  src='/static/images/avatar/2.jpg'
-                />
+            <Tooltip title="Open settings">
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: '45px' }}
-              id='menu-appbar'
+              sx={{ mt: "45px" }}
+              id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem
-                  key={setting}
-                  onClick={handleCloseUserMenu}
-                >
-                  <Typography textAlign='center'>{setting}</Typography>
+                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -191,6 +186,6 @@ function NavbarAdmin() {
         </Toolbar>
       </Container>
     </AppBar>
-  )
+  );
 }
-export default NavbarAdmin
+export default NavbarAdmin;
