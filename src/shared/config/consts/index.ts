@@ -15,4 +15,5 @@ export const PRIVATE_ROUTES = {
   POST_EDITING: "edit",
   ADMIN: "/admin",
   PROFILE: "/profile",
+  CHAT: "/chat",
 };

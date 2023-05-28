@@ -15,6 +15,7 @@ import Posts from "./posts";
 import PostCreation from "./postCreation";
 import PostEdition from "./postEdition";
 import ProfilePage from "./profile";
+import Chat from "./chat";
 
 const Router = () => {
   const isAuthorized = useAppSelector((store) => store.user.isAuthorized);
@@ -28,7 +29,8 @@ const Router = () => {
         ))}
         {(isAuthorized || user.type === 2) && (
           <>
-            <Route path={PRIVATE_ROUTES.HOME} element={<Home />}></Route>
+            <Route path={PRIVATE_ROUTES.CHAT} element={<Chat />} />
+            <Route path={PRIVATE_ROUTES.HOME} element={<Home />} />
             <Route
               path={PRIVATE_ROUTES.PROFILE}
               element={<ProfilePage />}
