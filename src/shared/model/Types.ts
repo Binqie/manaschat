@@ -47,7 +47,7 @@ export interface IUser {
   fullname: string;
   facultyId: number;
   departmentId: number;
-  classroom: number | null;
+  classroom: number;
   course: number;
   yearOfAdmission: number;
   groupEntryYear?: number;

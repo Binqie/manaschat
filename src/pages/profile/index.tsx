@@ -26,10 +26,7 @@ import { GetUserIdByCookies } from "shared/lib/getUserIdByCookies";
 import MainContainer from "widgets/mainContainer";
 import { DeleteMe, Logout } from "shared/lib/usersRequests";
 import { DeleteCommentsByUserId } from "shared/lib/commentsRequests";
-
-const GetUserById = async () => {
-  return await $api.get(`/Users/Get?id=${GetUserIdByCookies()}`);
-};
+import { GetUserById } from "shared/lib/userRequests";
 
 const SendChangeGroupRequest = async (data: {
   course: number;

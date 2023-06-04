@@ -32,7 +32,7 @@ export const MessageLeft = (props: IMessageProps) => {
     </>
   );
 };
-//avatarが右にあるメッセージ（自分）
+
 export const MessageRight = (props: IMessageProps) => {
   const message = props.message ? props.message : "no message";
   const timestamp = props.timestamp ? props.timestamp : "";

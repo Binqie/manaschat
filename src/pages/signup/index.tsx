@@ -35,9 +35,7 @@ const Signup = () => {
   const [selectedDepartment, setSelectedDepartment] =
     useState<IDepartment | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<number>(0);
-  const [selectedClassroom, setSelectedClassroom] = useState<number | null>(
-    null
-  );
+  const [selectedClassroom, setSelectedClassroom] = useState<number>(0);
 
   const faculties: ISelectCollection = useAppSelector(
     (state) => state.user.faculties
@@ -160,7 +158,7 @@ const Signup = () => {
                 {...(input.name === "course" && {
                   onInput: ({ target }) => {
                     setSelectedCourse(+(target as HTMLButtonElement).value);
-                    setSelectedClassroom(null);
+                    setSelectedClassroom(0);
                   },
                 })}
                 {...(input.name === "classroom" && {

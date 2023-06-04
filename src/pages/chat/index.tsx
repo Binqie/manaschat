@@ -1,6 +1,5 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
-import * as React from "react";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -20,12 +19,17 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
-import { useAppSelector } from "shared/hooks";
-import MainContainer from "widgets/mainContainer";
+import { useAppDispatch, useAppSelector } from "shared/hooks";
 import Messages from "./messages";
 import { TextInput } from "./textInput";
 
-const socket = io("http://localhost:4000");
+import { HubConnectionBuilder } from "@microsoft/signalr";
+import { IUser } from "shared/model/Types";
+import { setUser } from "app/store/slices/UserSlice";
+import { GetUserById } from "shared/lib/userRequests";
+import { $api } from "shared/api";
+
+// const socket = io("http://localhost:4000");
 
 const drawerWidth = 240;
 
@@ -80,6 +84,22 @@ interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
 
+interface IMessage {
+  chatId: string;
+  authorId: number;
+  message: string;
+}
+
+interface IRecieveMessage {
+  authorFullname: string;
+  authorId: number;
+  chatId: string;
+  color: string;
+  createdAt: string;
+  id: number;
+  message: string;
+}
+
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
 })<AppBarProps>(({ theme, open }) => ({
@@ -98,10 +118,71 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
+const GetChat = async (chatId: string) => {
+  console.log("chatId", chatId);
+  return await $api.get(`/Chats/GetChat?chatId=${chatId}`);
+};
+
 export default function Chat() {
+  const dispatch = useAppDispatch();
+  const user: IUser = useAppSelector((store) => store.user.user);
+
+  const [connection, setConnection] = useState<any>();
+  const [chat, setChat] = useState([]);
+  const [chatId, setChatId] = useState<string>("");
+  const latestChat: any = useRef(null);
+  latestChat.current = chat;
+  console.log(chat, chatId);
+
+  useEffect(() => {
+    const newConnection = new HubConnectionBuilder()
+      .withUrl("https://localhost:7289/hubs/chat")
+      .withAutomaticReconnect()
+      .build();
+
+    setConnection(newConnection);
+    getUserInfo();
+    getChat();
+  }, []);
+
+  useEffect(() => {
+    if (connection) {
+      connection
+        .start()
+        .then((result: any) => {
+          console.log("Connected!");
+
+          connection.on("ReceiveMessage", (message: IRecieveMessage) => {
+            console.log("msg received", message);
+            const updatedChat: any = [...latestChat.current];
+            updatedChat.push(message);
+
+            setChat(updatedChat);
+          });
+        })
+        .catch((e: Error) => console.log("Connection failed: ", e));
+    }
+  }, [connection]);
+
+  useEffect(() => {
+    getChat();
+  }, [chatId]);
+
+  const sendMessage = async (message: IMessage) => {
+    if (connection) {
+      try {
+        await connection.send("SendMessage", message);
+        getChat();
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      alert("No connection to server yet.");
+    }
+  };
+
   const theme = useTheme();
-  const user = useAppSelector((store) => store.user.user);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -111,22 +192,34 @@ export default function Chat() {
     setOpen(false);
   };
 
-  const connect = () => {
-    socket.emit("connection", "shamir");
+  const handleMessage = (m: string) => {
+    const message: IMessage = {
+      chatId:
+        user.course === 0
+          ? user.classroom?.toString()
+          : `00${user.departmentId}${user.course}`,
+      authorId: user.id,
+      message: m,
+    };
+
+    sendMessage(message);
   };
 
-  const sendMessage = (message: string) => {
-    socket.emit("send_message", {
-      username: "shama",
-      message,
-      __creeatedAt__: Date(),
-    });
-    console.log(message);
+  const getUserInfo = async () => {
+    const user = await GetUserById();
+    dispatch(setUser(user.data));
+    setChatId(
+      user.data.course === 0
+        ? user.data.classroom?.toString()
+        : `00${user.data.departmentId}${user.data.course}`
+    );
+    getChat();
   };
 
-  useEffect(() => {
-    connect();
-  }, []);
+  const getChat = async () => {
+    const response = await GetChat(chatId);
+    setChat(response.data);
+  };
 
   return (
     // <MainContainer>
@@ -240,7 +333,7 @@ export default function Chat() {
             padding: "20px 10px 20px 0",
           }}
         >
-          <Messages socket={socket} />
+          <Messages messages={chat} />
         </Box>
         <Box
           sx={{
@@ -254,7 +347,7 @@ export default function Chat() {
             justifyContent: "space-between",
           }}
         >
-          <TextInput sendMessage={sendMessage} />
+          <TextInput sendMessage={handleMessage} />
         </Box>
       </Box>
     </Box>

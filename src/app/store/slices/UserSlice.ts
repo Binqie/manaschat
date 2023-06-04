@@ -15,7 +15,7 @@ const initialState: UserState = {
   isAuthorized: true,
   user: {
     id: -1,
-    classroom: null,
+    classroom: 0,
     course: 0,
     departmentId: 0,
     email: "0000.00000@manas.edu.kg",
