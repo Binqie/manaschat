@@ -22,7 +22,7 @@ import ThemeSwitcher from "ui/themeSwitch";
 
 const pages = [
   // { name: 'Sign In', link: '/signin' },
-  // { name: 'Sign Up', link: '/signup' },
+  { name: 'Чат', link: '/chat' },
   { name: "Посттор", link: "/posts" },
   { name: "Пост кошуу", link: "/posts/new" },
 ];

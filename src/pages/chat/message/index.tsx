@@ -1,46 +1,59 @@
-import React from "react";
 import Avatar from "@mui/material/Avatar";
-import deepOrange from "@mui/material/colors/deepOrange";
+import { IMessage } from "../messages";
 
-interface IMessageProps {
-  message: string;
-  timestamp: string;
-  photoURL: string;
-  displayName: string;
-  avatarDisp: boolean;
-}
-
-export const MessageLeft = (props: IMessageProps) => {
-  const message = props.message ? props.message : "no message";
-  const timestamp = props.timestamp ? props.timestamp : "";
-  const photoURL = props.photoURL ? props.photoURL : "dummy.js";
-  const displayName = props.displayName ? props.displayName : "名無しさん";
+export const MessageLeft = ({ message }: { message: IMessage }) => {
   return (
-    <>
-      <div>
-        <Avatar alt={displayName} src={photoURL}></Avatar>
+    <div
+      style={{
+        margin: "10px 0",
+        display: "flex",
+        flexDirection: "column",
+        // border: "1px solid red",
+      }}
+    >
+      <div
+        style={{
+          color: "black",
+          borderRadius: "5px",
+          border: "1px solid gray",
+          alignSelf: "flex-start",
+          padding: "5px",
+          backgroundColor: message.color,
+        }}
+      >
+        <div>{message.authorFullname}</div>
         <div>
-          <div>{displayName}</div>
-          <div>
-            <div>
-              <p>{message}</p>
-            </div>
-            <div>{timestamp}</div>
-          </div>
+          <p style={{ color: "black"}}>{message.message}</p>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
-export const MessageRight = (props: IMessageProps) => {
-  const message = props.message ? props.message : "no message";
-  const timestamp = props.timestamp ? props.timestamp : "";
+export const MessageRight = ({ message }: { message: IMessage }) => {
   return (
-    <div>
-      <div>
-        <p>{message}</p>
-        <div>{timestamp}</div>
+    <div
+      style={{
+        margin: "10px 0",
+        display: "flex",
+        flexDirection: "column",
+        // border: "1px solid red",
+      }}
+    >
+      <div
+        style={{
+          color: "black",
+          borderRadius: "5px",
+          border: "1px solid gray",
+          alignSelf: "flex-end",
+          padding: "5px",
+          backgroundColor: message.color,
+        }}
+      >
+        <div>Сиз</div>
+        <div>
+          <p style={{ color: "black" }}>{message.message}</p>
+        </div>
       </div>
     </div>
   );

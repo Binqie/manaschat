@@ -13,12 +13,16 @@ export const TextInput = ({
     <>
       <TextField
         id="standard-text"
+        value={message}
         label="Кат"
         sx={{ width: "100%", border: "none", borderColor: "transparent" }}
         onChange={(e) => setMessage(e.target.value)}
       />
       <Button
-        onClick={() => sendMessage(message)}
+        onClick={() => {
+          sendMessage(message);
+          setMessage("");
+        }}
         variant="contained"
         color="primary"
       >

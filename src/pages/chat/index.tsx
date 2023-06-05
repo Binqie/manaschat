@@ -22,12 +22,15 @@ import MailIcon from "@mui/icons-material/Mail";
 import { useAppDispatch, useAppSelector } from "shared/hooks";
 import Messages from "./messages";
 import { TextInput } from "./textInput";
+import { BiArrowBack } from 'react-icons/bi'
 
-import { HubConnectionBuilder } from "@microsoft/signalr";
+import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { IUser } from "shared/model/Types";
 import { setUser } from "app/store/slices/UserSlice";
 import { GetUserById } from "shared/lib/userRequests";
 import { $api } from "shared/api";
+import { PRIVATE_ROUTES } from "shared/config/consts";
+import { Link } from "react-router-dom";
 
 // const socket = io("http://localhost:4000");
 
@@ -91,13 +94,13 @@ interface IMessage {
 }
 
 interface IRecieveMessage {
-  authorFullname: string;
-  authorId: number;
+  // id: number;
   chatId: string;
-  color: string;
-  createdAt: string;
-  id: number;
+  authorId: number;
   message: string;
+  authorFullname: string;
+  color: string;
+  // createdAt: string;
 }
 
 const AppBar = styled(MuiAppBar, {
@@ -123,16 +126,23 @@ const GetChat = async (chatId: string) => {
   return await $api.get(`/Chats/GetChat?chatId=${chatId}`);
 };
 
+const GetGroupmates = async () => {
+  return await $api.get("/Chats/GetGroupMates");
+};
+
 export default function Chat() {
   const dispatch = useAppDispatch();
   const user: IUser = useAppSelector((store) => store.user.user);
-
-  const [connection, setConnection] = useState<any>();
-  const [chat, setChat] = useState([]);
+  const [connection, setConnection] = useState<null | HubConnection>(null);
+  const [groupmates, setGroupmates] = useState<any>();
+  const [chat, setChat] = useState<IRecieveMessage[]>([]);
+  const [chatName, setChatName] = useState<string>("");
   const [chatId, setChatId] = useState<string>("");
   const latestChat: any = useRef(null);
+  const groupmatesRef: any = useRef(null);
+
   latestChat.current = chat;
-  console.log(chat, chatId);
+  groupmatesRef.value = groupmates;
 
   useEffect(() => {
     const newConnection = new HubConnectionBuilder()
@@ -143,6 +153,7 @@ export default function Chat() {
     setConnection(newConnection);
     getUserInfo();
     getChat();
+    getGroupmates();
   }, []);
 
   useEffect(() => {
@@ -153,10 +164,13 @@ export default function Chat() {
           console.log("Connected!");
 
           connection.on("ReceiveMessage", (message: IRecieveMessage) => {
-            console.log("msg received", message);
-            const updatedChat: any = [...latestChat.current];
+            const author = groupmatesRef.value.find(
+              (x: IUser) => x.id === message.authorId
+            );
+            message.authorFullname = author.fullname;
+            message.color = author.color;
+            const updatedChat = [...latestChat.current];
             updatedChat.push(message);
-
             setChat(updatedChat);
           });
         })
@@ -172,7 +186,7 @@ export default function Chat() {
     if (connection) {
       try {
         await connection.send("SendMessage", message);
-        getChat();
+        //getChat();
       } catch (e) {
         console.log(e);
       }
@@ -213,12 +227,16 @@ export default function Chat() {
         ? user.data.classroom?.toString()
         : `00${user.data.departmentId}${user.data.course}`
     );
-    getChat();
   };
 
   const getChat = async () => {
-    const response = await GetChat(chatId);
-    setChat(response.data);
+    const chat = await GetChat(chatId);
+    setChat(chat.data);
+  };
+
+  const getGroupmates = async () => {
+    const groutmates = await GetGroupmates();
+    setGroupmates(groutmates.data);
   };
 
   return (
@@ -263,28 +281,28 @@ export default function Chat() {
         </DrawerHeader>
         <Divider />
         <List>
-          {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
+          <ListItem disablePadding sx={{ display: "block" }}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
                 sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
                 }}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          ))}
+                <Link to={PRIVATE_ROUTES.HOME}>
+                  <BiArrowBack />
+                </Link>
+              </ListItemIcon>
+              <ListItemText primary={chatId} sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
         </List>
         {/* <Divider />
           <List>
@@ -328,12 +346,13 @@ export default function Chat() {
         <Box
           sx={{
             height: "100%",
-            maxHeight: 800,
             overflow: "scroll",
             padding: "20px 10px 20px 0",
           }}
         >
-          <Messages messages={chat} />
+          <Messages
+            messages={chat.filter((message) => message.chatId === chatId)}
+          />
         </Box>
         <Box
           sx={{
