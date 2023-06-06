@@ -51,6 +51,7 @@ const Signup = () => {
   } = useForm({ mode: "onTouched" });
 
   const onSubmit = async (data: any) => {
+    console.log(data);
     const userInfo: UserType = {
       email: data.email,
       password: data.password,

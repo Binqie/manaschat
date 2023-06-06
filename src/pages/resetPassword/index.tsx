@@ -57,7 +57,8 @@ const ResetPassword = () => {
         sm={4}
         md={7}
         sx={{
-          backgroundImage: "url(https://source.unsplash.com/random)",
+          backgroundImage:
+            "url(https://www.manas.edu.kg/images/frongal/frontgal2.jpg)",
           backgroundRepeat: "no-repeat",
           backgroundColor: (t) =>
             t.palette.mode === "light"
@@ -155,7 +156,7 @@ const ResetPassword = () => {
             >
               Жаңыртүү
             </Button>
-            <Grid container gap={'10px'}>
+            <Grid container gap={"10px"}>
               <Grid item xs>
                 <Link to="/password/forgot">Сыр сөздү унуттуңузбу?</Link>
               </Grid>

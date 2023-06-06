@@ -12,17 +12,17 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import { Await, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { BASE_URL, PRIVATE_ROUTES } from "shared/config/consts";
 import { $api } from "shared/api";
 import { useAppDispatch } from "shared/hooks";
 import { logout } from "app/store/slices/UserSlice";
-import { FormControlLabel } from "@mui/material";
 import ThemeSwitcher from "ui/themeSwitch";
+import Logo from "shared/assets/logo.png";
 
 const pages = [
   // { name: 'Sign In', link: '/signin' },
-  { name: 'Чат', link: '/chat' },
+  { name: "Чат", link: "/chat" },
   { name: "Посттор", link: "/posts" },
   { name: "Пост кошуу", link: "/posts/new" },
 ];
@@ -64,7 +64,8 @@ function Navbar() {
     <AppBar position="sticky">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+          <img style={{ maxWidth: 50, marginRight: 10 }} src={Logo} />
+          {/* <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} /> */}
           <Typography
             variant="h6"
             noWrap

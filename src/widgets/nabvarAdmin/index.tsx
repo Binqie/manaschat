@@ -43,6 +43,7 @@ function NavbarAdmin() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
     Logout();
+    return redirect("./");
   };
 
   return (

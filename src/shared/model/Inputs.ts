@@ -16,7 +16,7 @@ export const PostFormInputs = [
 export const SignupInputs = [
   {
     id: "email",
-    name: "Email",
+    name: "email",
     type: "email",
     label: "Почтаңызды жазыңыз",
     hint: "Сиздин почта 0000.00000@manas.edu.kg форматында болуусу керек",
@@ -29,7 +29,7 @@ export const SignupInputs = [
   },
   {
     id: "pass",
-    name: "Сыр сөз",
+    name: "password",
     type: "password",
     label: "Сыр сөздү тандаңыз",
     hint: "Сыр сөздүн узундугу 4-15 символ.",
@@ -41,7 +41,7 @@ export const SignupInputs = [
   },
   {
     id: "fullname",
-    name: "Аты жөнүңүз",
+    name: "fullname",
     type: "text",
     label: "Сиздин аты жөнүңүз",
     validation: {
@@ -51,7 +51,7 @@ export const SignupInputs = [
   },
   {
     id: "course",
-    name: "Курс",
+    name: "course",
     type: "number",
     label: "Сиздин курс",
     validation: {
@@ -62,7 +62,7 @@ export const SignupInputs = [
   },
   {
     id: "classroom",
-    name: "Группа",
+    name: "classroom",
     type: "number",
     label: "Сиздин группа",
     display: "none",
@@ -72,7 +72,7 @@ export const SignupInputs = [
   },
   {
     id: "yearOfAdmission",
-    name: "Тапшырган жыл",
+    name: "yearOfAdmission",
     type: "month",
     label: "Тапшырган жылыңыз",
     validation: {

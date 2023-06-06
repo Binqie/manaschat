@@ -48,7 +48,8 @@ const Confirm = () => {
         sm={4}
         md={7}
         sx={{
-          backgroundImage: "url(https://source.unsplash.com/random)",
+          backgroundImage:
+            "url(https://rezonans.kg/wp-content/uploads/2021/06/755-scaled.jpg)",
           backgroundRepeat: "no-repeat",
           backgroundColor: (t) =>
             t.palette.mode === "light"
