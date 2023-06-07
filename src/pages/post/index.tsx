@@ -27,7 +27,7 @@ import { PRIVATE_ROUTES } from "shared/config/consts";
 import { useAppDispatch, useAppSelector } from "shared/hooks";
 import { GetUserIdByCookies } from "shared/lib/getUserIdByCookies";
 import { DeletePostRequest, GetPost } from "shared/lib/postsRequests";
-import { ICommentCreate, IPost } from "shared/model/Types";
+import { IComment, ICommentCreate, IPost } from "shared/model/Types";
 import MainContainer from "widgets/mainContainer";
 import { deletePost, setPost } from "app/store/slices/PostSlice";
 import {
@@ -37,14 +37,11 @@ import {
 } from "shared/lib/commentsRequests";
 import { addComment, setComments } from "app/store/slices/CommentSlice";
 import CommentsGroup from "widgets/commentsGroup";
-import {
-  DeleteElectionPostResult,
-  DeleteSuggestionPostResult,
-} from "shared/lib/postResultsRequests";
 
 const Post = () => {
   const dispatch = useAppDispatch();
-  const postId = useParams().postId || -1;
+  const user = useAppSelector((store) => store.user.user);
+  const postId = Number(useParams().postId) || -1;
 
   const [comment, setComment] = useState<string>("");
 
@@ -69,13 +66,24 @@ const Post = () => {
   };
 
   const handleSendComment = async () => {
+    console.log(Date.now().toLocaleString())
     const data: ICommentCreate = {
       postId: post.id,
       text: comment,
     };
 
     const response = await SendCreateCommentRequest(data);
-    dispatch(addComment(data));
+    const comm: IComment = {
+      author: user,
+      authorId: user.id,
+      id: -1,
+      createdAt: new Date().toISOString(),
+      post: null,
+      postId: postId,
+      text: comment,
+    };
+
+    dispatch(addComment(comm));
   };
 
   const fetchPost = async () => {

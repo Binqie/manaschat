@@ -1,13 +1,13 @@
 export const PostFormInputs = [
   {
     id: "selectedTitle",
-    name: "Аталышы",
+    name: "title",
     type: "text",
     label: "Аталышы",
   },
   {
     id: "selectedBody",
-    name: "Текст",
+    name: "body",
     type: "text",
     label: "Текст",
   },

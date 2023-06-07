@@ -9,6 +9,7 @@ import { deleteComment } from "app/store/slices/CommentSlice";
 
 const CommentsGroup = ({ comments }: { comments: IComment[] }) => {
   const dispatch = useAppDispatch();
+  console.log(comments)
 
   const handleDeleteComment = async (id: number) => {
     const response = await DeleteCommentById(id);
